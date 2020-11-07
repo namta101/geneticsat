@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Solver {
-    private int POPULATION_SIZE = 100;
+    private int POPULATION_SIZE = 5;
     private ArrayList<Chromosome> population;
     private int[][] formula;
     private int numberOfVariables;
@@ -14,7 +14,7 @@ public class Solver {
     }
 
     private void initialisePopulation() {
-        for (int i = 0; i < POPULATION_SIZE - 1; i++) {
+        for (int i = 0; i < POPULATION_SIZE; i++) {
             population.add(new Chromosome(numberOfVariables));
         }
     }
