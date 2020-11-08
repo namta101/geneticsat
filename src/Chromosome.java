@@ -20,13 +20,9 @@ public class Chromosome {
             }
         }
         getClausesMatched();
-        getFitnessScore();
-        System.out.println("Genes: " + Arrays.toString(genes));
-        for (int i = 0; i < formula.size(); i++) {
-            System.out.println("Clauses: " + Arrays.toString(formula.get(i).getVariables()));
-        }
     }
-
+    
+    // Increment fitness score for every clause satisfied by the chromosome
     public void getClausesMatched() {
         for (int i = 0; i < formula.size(); i++) {
             Clause clause = formula.get(i);
@@ -54,13 +50,12 @@ public class Chromosome {
         this.fitnessScore++;
     }
 
-    public void calculateFitnessScore() {
-        this.fitnessScore = 50;
+    public double getFitnessScore() {
+        return fitnessScore;
     }
 
-    public double getFitnessScore() {
-        System.out.println(fitnessScore);
-        return fitnessScore;
+    public int[] getGenes() {
+        return genes;
     }
 
 }

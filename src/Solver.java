@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class Solver {
     private int POPULATION_SIZE = 1;
@@ -10,9 +12,19 @@ public class Solver {
         population = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
+        boolean solutionFound = false;
         initialisePopulation();
         for (int i = 0; i < population.size(); i++) {
-            population.get(i).getFitnessScore();
+            if (population.get(i).getFitnessScore() == formula.size()) {
+                System.out.println("Success!");
+                System.out.println((Arrays.toString(population.get(i).getGenes())));
+                solutionFound = true;
+                break;
+            }
+        }
+        if(!solutionFound) {
+            System.out.println("Solution not found");
+            nextPopulation();
         }
     }
 
@@ -20,6 +32,10 @@ public class Solver {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.add(new Chromosome(numberOfVariables, formula));
         }
+    }
+
+    private void nextPopulation() {
+
     }
 
 }
