@@ -56,7 +56,7 @@ public class Solver {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
             population.get(i).mutate();
-            population.get(i).getClausesMatched();
+            population.get(i).assignFitnessScore();
         }
     }
 

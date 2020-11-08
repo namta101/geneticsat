@@ -11,6 +11,11 @@ public class Chromosome {
     public Chromosome(int numberOfGenes, ArrayList<Clause> formula) {
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
+        initialiseGenes();
+        assignFitnessScore();
+    }
+
+    private void initialiseGenes() {
         genes = new int[numberOfGenes];
         for (int i = 0; i < numberOfGenes; i++) {
             if (Math.random() < 0.5) {
@@ -19,11 +24,11 @@ public class Chromosome {
                 genes[i] = 1;
             }
         }
-        getClausesMatched();
     }
 
-    // Increment fitness score for every clause satisfied by the chromosome
-    public void getClausesMatched() {
+    // Return the number of clauses matched
+    public int getClausesMatched() {
+        int numberOfClausesMatched = 0;
         for (int i = 0; i < formula.size(); i++) {
             Clause clause = formula.get(i);
             int[] variables = clause.getVariables();
@@ -40,10 +45,14 @@ public class Chromosome {
                 }
             }
             if (isClauseSatisfied) {
-                incrementFitnessScore();
+                numberOfClausesMatched++;
             }
         }
+        return numberOfClausesMatched;
+    }
 
+    public void assignFitnessScore() {
+        this.fitnessScore = getClausesMatched();
     }
 
     public int[] mutate() {
