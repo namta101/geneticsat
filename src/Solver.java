@@ -1,8 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import jdk.internal.net.http.common.Pair;
+
+import java.util.*;
+
 public class Solver {
     private int POPULATION_SIZE = 1;
+    private double ELITISM_RATE = 0.2;
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
     private int numberOfVariables;
@@ -21,7 +26,7 @@ public class Solver {
         }
         int attempt = 2;
         while (!solutionFound && attempt < 10) {
-            System.out.println("This is atttempt: " + attempt);
+            System.out.println("This is attempt: " + attempt);
             nextPopulation();
             solutionFound = isSatisfied();
             if (solutionFound) {
@@ -54,9 +59,27 @@ public class Solver {
     private void nextPopulation() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
-            population.get(i).mutate();
+            population.get(i).mutate(); // prints false
             population.get(i).assignFitnessScore();
-            sortPopulationByFitnessValue();
+           // sortPopulationByFitnessValue();
+        }
+    }
+
+    private void crossover() {
+
+    }
+
+    // Select a pair of chromosomes to crossover
+    private int rouletteWheelSelection() {
+        // keep adding to the total value each insert into arraylist
+        // for all values of the arraylist, if value is bigger or equal to random
+        // number, choose that index which will be the person
+    }
+
+    private double totalPopulationFitnessScore() {
+        double total = 0;
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            total = total + population.get(i).getFitnessScore();
         }
     }
 
@@ -72,7 +95,7 @@ public class Solver {
         });
 
         // for (int i = 0; i < POPULATION_SIZE; i++) {
-        //     System.out.println(population.get(i).getFitnessScore());
+        // System.out.println(population.get(i).getFitnessScore());
         // }
 
     }

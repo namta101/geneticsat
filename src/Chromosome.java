@@ -59,7 +59,6 @@ public class Chromosome {
 
     public void mutate() {
         if (shouldMutate()) {
-            System.out.print("Mutating" + "\n");
             Random rand = new Random();
             int upperBound = numberOfGenes - 1;
             int positionToMutate = rand.nextInt(upperBound);
