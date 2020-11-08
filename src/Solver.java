@@ -1,12 +1,10 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import jdk.internal.net.http.common.Pair;
 
-import java.util.*;
 
 public class Solver {
-    private int POPULATION_SIZE = 1;
+    private int POPULATION_SIZE = 5;
     private double ELITISM_RATE = 0.2;
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
@@ -74,6 +72,7 @@ public class Solver {
         // keep adding to the total value each insert into arraylist
         // for all values of the arraylist, if value is bigger or equal to random
         // number, choose that index which will be the person
+        return -1;
     }
 
     private double totalPopulationFitnessScore() {
@@ -81,6 +80,7 @@ public class Solver {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             total = total + population.get(i).getFitnessScore();
         }
+        return total;
     }
 
     // Sorts the populattion by their fitness score in descending order
