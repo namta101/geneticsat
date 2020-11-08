@@ -1,5 +1,7 @@
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Chromosome {
 
@@ -21,7 +23,7 @@ public class Chromosome {
         }
         getClausesMatched();
     }
-    
+
     // Increment fitness score for every clause satisfied by the chromosome
     public void getClausesMatched() {
         for (int i = 0; i < formula.size(); i++) {
@@ -46,8 +48,28 @@ public class Chromosome {
 
     }
 
-    public void incrementFitnessScore() {
+    public int[] mutate() {
+        Random rand = new Random();
+        int upperBound = numberOfGenes - 1;
+        int positionToMutate = rand.nextInt(upperBound);
+        if (genes[positionToMutate] == 0) {
+            genes[positionToMutate] = 1;
+        } else {
+            genes[positionToMutate] = 0;
+        }
+        return genes;
+    }
+
+    private double getMutationRate() {
+        return 0.01;
+    }
+
+    private void incrementFitnessScore() {
         this.fitnessScore++;
+    }
+
+    public void clearFitnessScore() {
+        this.fitnessScore = 0;
     }
 
     public double getFitnessScore() {

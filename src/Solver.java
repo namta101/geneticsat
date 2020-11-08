@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 public class Solver {
     private int POPULATION_SIZE = 1;
     private ArrayList<Chromosome> population;
@@ -22,9 +21,20 @@ public class Solver {
                 break;
             }
         }
-        if(!solutionFound) {
+        if (!solutionFound) {
             System.out.println("Solution not found");
+            System.out.println((Arrays.toString(population.get(0).getGenes())));
             nextPopulation();
+            System.out.println((Arrays.toString(population.get(0).getGenes())));
+            for (int i = 0; i < POPULATION_SIZE; i++) {
+                population.get(i).getClausesMatched();
+                System.out.println(population.get(i).getFitnessScore());
+                if (population.get(i).getFitnessScore() == formula.size()) {
+                    System.out.println("Success 2!");
+                    System.out.println((Arrays.toString(population.get(i).getGenes())));
+
+                }
+            }
         }
     }
 
@@ -35,7 +45,10 @@ public class Solver {
     }
 
     private void nextPopulation() {
-
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            population.get(i).clearFitnessScore();
+            population.get(i).mutate();
+        }
     }
 
 }
