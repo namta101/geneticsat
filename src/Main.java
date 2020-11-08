@@ -12,7 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
         formula = new ArrayList<Clause>();
-
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
     }
@@ -44,21 +43,12 @@ public class Main {
                 }
 
             }
-
             scanner.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("File is not found, please check file exists or arguments have been typed in correctly");
             e.printStackTrace();
         }
-
-    }
-
-    public boolean check() {
-        // population contains 100 chromosomes,
-        // for each clause, value = clause[0] (34), if chromsome[Math.abs(34)] = 0 and
-        // value = positive then return true else return false
-        return true;
     }
 
     public static int[] convertStringArrayToIntArray(String[] stringArray) {

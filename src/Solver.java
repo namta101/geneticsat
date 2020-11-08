@@ -21,20 +21,21 @@ public class Solver {
                 break;
             }
         }
-        if (!solutionFound) {
+        int numberoftries = 2;
+        while (!solutionFound) {
             System.out.println("Solution not found");
-            System.out.println((Arrays.toString(population.get(0).getGenes())));
             nextPopulation();
-            System.out.println((Arrays.toString(population.get(0).getGenes())));
             for (int i = 0; i < POPULATION_SIZE; i++) {
                 population.get(i).getClausesMatched();
                 System.out.println(population.get(i).getFitnessScore());
                 if (population.get(i).getFitnessScore() == formula.size()) {
-                    System.out.println("Success 2!");
+                    System.out.println("Success on number: " + numberoftries);
                     System.out.println((Arrays.toString(population.get(i).getGenes())));
-
+                    solutionFound = true;
+                    break;
                 }
             }
+            numberoftries++;
         }
     }
 
