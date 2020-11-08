@@ -4,17 +4,17 @@ import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-
 public class Main {
 
     private static int numberOfClauses;
     private static int numberOfVariables;
-    private static int[][] propositionalformulaformatted;
+    private static ArrayList<Clause> formula;
 
     public static void main(String[] args) {
+        formula = new ArrayList<Clause>();
+
         readDIMACSFile(args[0]);
-        Solver satSolver = new Solver(propositionalformulaformatted, numberOfVariables);
-        satSolver.solve();
+        Solver satSolver = new Solver(formula, numberOfVariables);
     }
 
     // Reads the inputted DIMACS file, and populates the class variables with the
@@ -23,7 +23,6 @@ public class Main {
         try {
             File file = new File(dimacsFileIn);
             Scanner scanner = new Scanner(file);
-            int clauseNumber = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (line.length() >= 1) {
@@ -36,13 +35,10 @@ public class Main {
                         numberOfClauses = Integer.parseInt(pcnfline[3]);
                         System.out.print("Number of variables " + numberOfVariables + "\n");
                         System.out.print("Number of clauses: " + numberOfClauses + "\n");
-                        propositionalformulaformatted = new int[numberOfClauses][3];
                     } else { // insert the clauses into a 2d array
                         String[] clauseLineVariables = line.split("\\s+");
                         int[] clauseLineVariablesInt = convertStringArrayToIntArray(clauseLineVariables);
-                        System.out.println(Arrays.toString(clauseLineVariablesInt));
-                        propositionalformulaformatted[clauseNumber] = clauseLineVariablesInt;
-                        clauseNumber++;
+                        formula.add(new Clause(clauseLineVariablesInt));
                     }
 
                 }
@@ -50,7 +46,6 @@ public class Main {
             }
 
             scanner.close();
-            System.out.println(Arrays.deepToString(propositionalformulaformatted));
 
         } catch (FileNotFoundException e) {
             System.out.println("File is not found, please check file exists or arguments have been typed in correctly");
