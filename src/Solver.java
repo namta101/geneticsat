@@ -6,37 +6,44 @@ public class Solver {
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
     private int numberOfVariables;
+    private boolean solutionFound;
+    private int[] satisfyingSolution;
 
     public Solver(ArrayList<Clause> formula, int numberOfVariables) {
         population = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
-        boolean solutionFound = false;
-        initialisePopulation();
+        solutionFound = false;
+        initialisePopulation();     
+        solutionFound = isSatisfied();
+        if (solutionFound) {
+            printSatisfyingSolution(satisfyingSolution);
+        }
+        int attempt = 2;
+        while (!solutionFound) {
+            System.out.println("This is atttempt: " + attempt);
+            nextPopulation();
+            solutionFound = isSatisfied();
+            if (solutionFound) {
+                printSatisfyingSolution(satisfyingSolution);
+            }
+            attempt++;
+
+        }
+    }
+
+    private boolean isSatisfied() {
         for (int i = 0; i < population.size(); i++) {
             if (population.get(i).getFitnessScore() == formula.size()) {
-                System.out.println("Success!");
-                System.out.println((Arrays.toString(population.get(i).getGenes())));
-                solutionFound = true;
-                break;
+                satisfyingSolution = population.get(i).getGenes();
+                return true;
             }
         }
-        int numberoftries = 2;
-        while (!solutionFound) {
-            System.out.println("Solution not found");
-            nextPopulation();
-            for (int i = 0; i < POPULATION_SIZE; i++) {
-                population.get(i).getClausesMatched();
-                System.out.println(population.get(i).getFitnessScore());
-                if (population.get(i).getFitnessScore() == formula.size()) {
-                    System.out.println("Success on number: " + numberoftries);
-                    System.out.println((Arrays.toString(population.get(i).getGenes())));
-                    solutionFound = true;
-                    break;
-                }
-            }
-            numberoftries++;
-        }
+        return false;
+    }
+
+    private void printSatisfyingSolution(int[] satisfyingSolution) {
+        System.out.println("Solution satisfied: " + Arrays.toString(satisfyingSolution));
     }
 
     private void initialisePopulation() {
@@ -49,6 +56,7 @@ public class Solver {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
             population.get(i).mutate();
+            population.get(i).getClausesMatched();
         }
     }
 

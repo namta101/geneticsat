@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
@@ -29,12 +28,11 @@ public class Main {
                         System.out.println(line.substring(1, line.length())); // Print out comments of the file
                     } else if (line.charAt(0) == ('p')) {
                         String[] pcnfline = line.split("\\s+"); // Assigns the number of variables and clauses from file
-                        numberOfVariables = Integer.parseInt(pcnfline[2]);// And initialises the 2D array to hold the
-                                                                          // clauses
+                        numberOfVariables = Integer.parseInt(pcnfline[2]);
                         numberOfClauses = Integer.parseInt(pcnfline[3]);
                         System.out.print("Number of variables " + numberOfVariables + "\n");
                         System.out.print("Number of clauses: " + numberOfClauses + "\n");
-                    } else { // insert the clauses into a 2d array
+                    } else { // create the formula by inserting the split up clauses into an arraylist
                         String[] clauseLineVariables = line.split("\\s+");
                         int[] clauseLineVariablesInt = convertStringArrayToIntArray(clauseLineVariables);
                         formula.add(new Clause(clauseLineVariablesInt));
