@@ -8,6 +8,8 @@ public class Chromosome {
     private int[] genes;
     private ArrayList<Clause> formula;
 
+    private final double MUTATION_RATE = 0.7;
+
     public Chromosome(int numberOfGenes, ArrayList<Clause> formula) {
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
@@ -55,20 +57,25 @@ public class Chromosome {
         this.fitnessScore = getClausesMatched();
     }
 
-    public int[] mutate() {
-        Random rand = new Random();
-        int upperBound = numberOfGenes - 1;
-        int positionToMutate = rand.nextInt(upperBound);
-        if (genes[positionToMutate] == 0) {
-            genes[positionToMutate] = 1;
-        } else {
-            genes[positionToMutate] = 0;
+    public void mutate() {
+        if (shouldMutate()) {
+            System.out.print("Mutating" + "\n");
+            Random rand = new Random();
+            int upperBound = numberOfGenes - 1;
+            int positionToMutate = rand.nextInt(upperBound);
+            if (genes[positionToMutate] == 0) {
+                genes[positionToMutate] = 1;
+            } else {
+                genes[positionToMutate] = 0;
+            }
+            
         }
-        return genes;
     }
 
-    private double getMutationRate() {
-        return 0.01;
+    private boolean shouldMutate() {
+        double randomNumber = Math.random();
+        return (randomNumber <= MUTATION_RATE);
+
     }
 
     private void incrementFitnessScore() {

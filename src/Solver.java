@@ -14,13 +14,13 @@ public class Solver {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         solutionFound = false;
-        initialisePopulation();     
+        initialisePopulation();
         solutionFound = isSatisfied();
         if (solutionFound) {
             printSatisfyingSolution(satisfyingSolution);
         }
         int attempt = 2;
-        while (!solutionFound) {
+        while (!solutionFound && attempt < 10) {
             System.out.println("This is atttempt: " + attempt);
             nextPopulation();
             solutionFound = isSatisfied();
@@ -28,7 +28,6 @@ public class Solver {
                 printSatisfyingSolution(satisfyingSolution);
             }
             attempt++;
-
         }
     }
 
@@ -57,7 +56,25 @@ public class Solver {
             population.get(i).clearFitnessScore();
             population.get(i).mutate();
             population.get(i).assignFitnessScore();
+            sortPopulationByFitnessValue();
         }
+    }
+
+    // Sorts the populattion by their fitness score in descending order
+    private void sortPopulationByFitnessValue() {
+        population.sort((Chromosome c1, Chromosome c2) -> {
+            if (c1.getFitnessScore() > c2.getFitnessScore())
+                return -1;
+            if (c1.getFitnessScore() < c2.getFitnessScore())
+                return 1;
+            return 0;
+
+        });
+
+        // for (int i = 0; i < POPULATION_SIZE; i++) {
+        //     System.out.println(population.get(i).getFitnessScore());
+        // }
+
     }
 
 }
