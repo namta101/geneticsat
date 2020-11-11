@@ -9,10 +9,17 @@ public class Main {
     private static int numberOfVariables;
     private static ArrayList<Clause> formula;
 
+    private static long startTime;
+    private static long stopTime;
+    private static long elapsedTime;
+
     public static void main(String[] args) {
+        startTimer();
         formula = new ArrayList<Clause>();
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
+        stopTimer();
+        System.out.println("Completed in: " + elapsedTime + "ms");
     }
 
     // Reads the inputted DIMACS file, and populates the class variables with the
@@ -47,6 +54,15 @@ public class Main {
             System.out.println("File is not found, please check file exists or arguments have been typed in correctly");
             e.printStackTrace();
         }
+    }
+
+    public static void startTimer() {
+        startTime = System.currentTimeMillis();
+    }
+
+    public static void stopTimer() {
+        stopTime = System.currentTimeMillis();
+        elapsedTime = stopTime - startTime;
     }
 
     public static int[] convertStringArrayToIntArray(String[] stringArray) {

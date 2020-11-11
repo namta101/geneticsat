@@ -11,7 +11,7 @@ public class Chromosome {
     private final double MUTATION_RATE = 0.7;
 
     public Chromosome() {
-        
+
     }
 
     public Chromosome(int numberOfGenes, ArrayList<Clause> formula) {
@@ -71,7 +71,7 @@ public class Chromosome {
             } else {
                 genes[positionToMutate] = 0;
             }
-            
+
         }
     }
 
@@ -79,6 +79,10 @@ public class Chromosome {
         double randomNumber = Math.random();
         return (randomNumber <= MUTATION_RATE);
 
+    }
+
+    public void intakeParentsGenes(int[] parentsGenes) {
+        this.genes = parentsGenes;
     }
 
     private void incrementFitnessScore() {

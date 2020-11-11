@@ -4,8 +4,8 @@ import java.util.Random;
 
 
 public class Solver {
-    private int POPULATION_SIZE = 5;
-    private double ELITISM_RATE = 0.2;
+    private int POPULATION_SIZE = 300;
+    private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
     private int numberOfVariables;
@@ -23,8 +23,8 @@ public class Solver {
             printSatisfyingSolution(satisfyingSolution);
         }
         int attempt = 2;
-        while (!solutionFound && attempt < 10) {
-            System.out.println("This is attempt: " + attempt);
+        while (!solutionFound  ) {
+            System.out.println("This is Population number: " + attempt);
             nextPopulation();
             solutionFound = isSatisfied();
             if (solutionFound) {
@@ -55,22 +55,25 @@ public class Solver {
     }
 
     private void nextPopulation() {
+        population = createNewPopulation();
+
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
             population.get(i).mutate(); // prints false
             population.get(i).assignFitnessScore();
             // sortPopulationByFitnessValue();
         }
+
     }
 
-    // Applies Uniform Crossover
-    private void crossover() {
+    // Applies Uniform Crossover and returns breeded offspring
+    private Chromosome crossover() {
 
         int[] parentOneGenes = rouletteWheelSelection().getGenes();
         int[] parentTwoGenes = rouletteWheelSelection().getGenes();
         int lengthOfGenes = parentOneGenes.length;
 
-        Chromosome offspring = new Chromosome();
+        Chromosome offspring = new Chromosome(numberOfVariables, formula);
         int[] offspringGenes = new int[lengthOfGenes];
 
         for (int i = 0; i < lengthOfGenes - 1; i += 2) {
@@ -80,15 +83,38 @@ public class Solver {
             }
             offspringGenes[i] = parentOneGenes[i];
             offspringGenes[i + 1] = parentTwoGenes[i + 1];
-
         }
 
-        //gives new genes to offspring genes, return    
+        offspring.intakeParentsGenes(offspringGenes);
+        // System.out.println("Offspring: " + Arrays.toString(offspring.getGenes()));
+        // System.out.println("Parent one: " + Arrays.toString(parentOneGenes));
+        // System.out.println("Parent two: " + Arrays.toString(parentTwoGenes));
+
+
+        return offspring;
     }
 
-    // private ArrayList<Chromosome> createNewPopulation() {
+    private ArrayList<Chromosome> createNewPopulation() {
 
-    // }
+        ArrayList<Chromosome> newPopulation = new ArrayList<>();
+
+        sortPopulationByFitnessValue();
+        double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
+        double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
+
+        for (int i = 0; i < individualsCloned; i++) {
+            Chromosome clonedIndividual = population.get(i);
+            newPopulation.add(clonedIndividual);
+        }
+
+        for (int i = 0; i < individualsCreated; i++) {
+            Chromosome clonedIndividual = crossover();
+            newPopulation.add(clonedIndividual);
+        }
+
+        return newPopulation;
+
+    }
 
     // Select a pair of chromosomes to crossover
     private Chromosome rouletteWheelSelection() {
@@ -103,14 +129,21 @@ public class Solver {
 
         int indexOfChromosomeToChoose = 0;
         Random rand = new Random();
-        double positionOnRouletteWheel = 1 + (rouletteTotal - 1 * rand.nextDouble()); // values from 1 to total
+        double positionOnRouletteWheel = 1 + ((rouletteTotal - 1) * rand.nextDouble()); // values from 1 to total
         for (int i = 0; i < rouletteWheel.length; i++) {
-            if (rouletteWheel[i] <= positionOnRouletteWheel) {
+            if (rouletteWheel[i] >= positionOnRouletteWheel) {
                 indexOfChromosomeToChoose = i;
                 break;
             }
         }
 
+        // System.out.println("roulette wheel: " + Arrays.toString(rouletteWheel));
+        // System.out.println("index: " + indexOfChromosomeToChoose);
+        // System.out.println("position on roulette wheel: " + positionOnRouletteWheel);
+        // System.out.println("total roulette wheel: " + rouletteTotal);
+
+
+        // System.out.println("Chosen roulette: " + Arrays.toString((population.get(indexOfChromosomeToChoose).getGenes())));
         return population.get(indexOfChromosomeToChoose);
 
     }
