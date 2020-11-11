@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Random;
 
 
 public class Solver {
@@ -59,20 +59,60 @@ public class Solver {
             population.get(i).clearFitnessScore();
             population.get(i).mutate(); // prints false
             population.get(i).assignFitnessScore();
-           // sortPopulationByFitnessValue();
+            // sortPopulationByFitnessValue();
         }
     }
 
+    // Applies Uniform Crossover
     private void crossover() {
 
+        int[] parentOneGenes = rouletteWheelSelection().getGenes();
+        int[] parentTwoGenes = rouletteWheelSelection().getGenes();
+        int lengthOfGenes = parentOneGenes.length;
+
+        Chromosome offspring = new Chromosome();
+        int[] offspringGenes = new int[lengthOfGenes];
+
+        for (int i = 0; i < lengthOfGenes - 1; i += 2) {
+            if (i == lengthOfGenes) {
+                offspringGenes[i] = parentOneGenes[i];
+                break;
+            }
+            offspringGenes[i] = parentOneGenes[i];
+            offspringGenes[i + 1] = parentTwoGenes[i + 1];
+
+        }
+
+        //gives new genes to offspring genes, return    
     }
 
+    // private ArrayList<Chromosome> createNewPopulation() {
+
+    // }
+
     // Select a pair of chromosomes to crossover
-    private int rouletteWheelSelection() {
-        // keep adding to the total value each insert into arraylist
-        // for all values of the arraylist, if value is bigger or equal to random
-        // number, choose that index which will be the person
-        return -1;
+    private Chromosome rouletteWheelSelection() {
+        // create the roulette wheel
+        double[] rouletteWheel = new double[POPULATION_SIZE];
+        double rouletteTotal = 0;
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            double chromosomeFitness = population.get(i).getFitnessScore();
+            rouletteTotal = rouletteTotal + chromosomeFitness;
+            rouletteWheel[i] = rouletteTotal;
+        }
+
+        int indexOfChromosomeToChoose = 0;
+        Random rand = new Random();
+        double positionOnRouletteWheel = 1 + (rouletteTotal - 1 * rand.nextDouble()); // values from 1 to total
+        for (int i = 0; i < rouletteWheel.length; i++) {
+            if (rouletteWheel[i] <= positionOnRouletteWheel) {
+                indexOfChromosomeToChoose = i;
+                break;
+            }
+        }
+
+        return population.get(indexOfChromosomeToChoose);
+
     }
 
     private double totalPopulationFitnessScore() {

@@ -10,6 +10,10 @@ public class Chromosome {
 
     private final double MUTATION_RATE = 0.7;
 
+    public Chromosome() {
+        
+    }
+
     public Chromosome(int numberOfGenes, ArrayList<Clause> formula) {
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
