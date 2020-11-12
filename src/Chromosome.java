@@ -8,7 +8,7 @@ public class Chromosome {
     private int[] genes;
     private ArrayList<Clause> formula;
 
-    private final double MUTATION_RATE = 0.7;
+    private final double MUTATION_RATE = 0.06;
 
     public Chromosome() {
 

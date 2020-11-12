@@ -1,39 +1,49 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-
+import java.util.Comparator;
+import java.util.stream.*;
 
 public class Solver {
-    private int POPULATION_SIZE = 300;
+    private int POPULATION_SIZE = 3000;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
     private int numberOfVariables;
     private boolean solutionFound;
     private int[] satisfyingSolution;
+    private long startTime;
+    private long upperTimeLimit = 50000; // 1 minute
 
     public Solver(ArrayList<Clause> formula, int numberOfVariables) {
         population = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         solutionFound = false;
+        startTimer();
         initialisePopulation();
         solutionFound = isSatisfied();
         if (solutionFound) {
             printSatisfyingSolution(satisfyingSolution);
         }
         int attempt = 2;
-        while (!solutionFound  ) {
+        while (!solutionFound) {
             System.out.println("This is Population number: " + attempt);
             nextPopulation();
             solutionFound = isSatisfied();
             if (solutionFound) {
                 printSatisfyingSolution(satisfyingSolution);
             }
+            if (upperTimeLimitReached()) {
+                printCurrentMostSatisfyingSolution();
+                break;
+            }
             attempt++;
         }
     }
 
+    // Checks whether there is a satisfying solution, if there is, assigns it to the
+    // field variable satisfying solution
     private boolean isSatisfied() {
         for (int i = 0; i < population.size(); i++) {
             if (population.get(i).getFitnessScore() == formula.size()) {
@@ -59,7 +69,7 @@ public class Solver {
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
-            population.get(i).mutate(); // prints false
+            population.get(i).mutate(); 
             population.get(i).assignFitnessScore();
             // sortPopulationByFitnessValue();
         }
@@ -89,7 +99,6 @@ public class Solver {
         // System.out.println("Offspring: " + Arrays.toString(offspring.getGenes()));
         // System.out.println("Parent one: " + Arrays.toString(parentOneGenes));
         // System.out.println("Parent two: " + Arrays.toString(parentTwoGenes));
-
 
         return offspring;
     }
@@ -142,8 +151,8 @@ public class Solver {
         // System.out.println("position on roulette wheel: " + positionOnRouletteWheel);
         // System.out.println("total roulette wheel: " + rouletteTotal);
 
-
-        // System.out.println("Chosen roulette: " + Arrays.toString((population.get(indexOfChromosomeToChoose).getGenes())));
+        // System.out.println("Chosen roulette: " +
+        // Arrays.toString((population.get(indexOfChromosomeToChoose).getGenes())));
         return population.get(indexOfChromosomeToChoose);
 
     }
@@ -158,6 +167,11 @@ public class Solver {
 
     // Sorts the populattion by their fitness score in descending order
     private void sortPopulationByFitnessValue() {
+
+        // System.out.println("before: ");
+        // for (int i = 0; i < POPULATION_SIZE; i++) {
+        // System.out.println(population.get(i).getFitnessScore());
+        // }
         population.sort((Chromosome c1, Chromosome c2) -> {
             if (c1.getFitnessScore() > c2.getFitnessScore())
                 return -1;
@@ -166,11 +180,26 @@ public class Solver {
             return 0;
 
         });
-
+        // System.out.println("after: ");
         // for (int i = 0; i < POPULATION_SIZE; i++) {
         // System.out.println(population.get(i).getFitnessScore());
         // }
 
+    }
+
+    private void printCurrentMostSatisfyingSolution() {
+        sortPopulationByFitnessValue();
+        System.out.println("Fittest solution found: " + Arrays.toString(population.get(0).getGenes()) + " \n"
+                + "Fitness score of: " + population.get(0).getFitnessScore());
+    }
+
+    private void startTimer() {
+        this.startTime = System.currentTimeMillis();
+    }
+
+    private boolean upperTimeLimitReached() {
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime));
+        return (System.currentTimeMillis() - startTime) > upperTimeLimit;
     }
 
 }
