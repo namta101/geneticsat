@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Comparator;
-import java.util.stream.*;
 
 public class Solver {
-    private int POPULATION_SIZE = 3000;
+    private int POPULATION_SIZE = 300;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> population;
     private ArrayList<Clause> formula;
@@ -13,7 +11,8 @@ public class Solver {
     private boolean solutionFound;
     private int[] satisfyingSolution;
     private long startTime;
-    private long upperTimeLimit = 50000; // 1 minute
+    private long upperTimeLimit = 50000; //
+    private int generationNumber = 0;
 
     public Solver(ArrayList<Clause> formula, int numberOfVariables) {
         population = new ArrayList<>();
@@ -22,13 +21,13 @@ public class Solver {
         solutionFound = false;
         startTimer();
         initialisePopulation();
+        generationNumber++;
         solutionFound = isSatisfied();
         if (solutionFound) {
             printSatisfyingSolution(satisfyingSolution);
         }
-        int attempt = 2;
         while (!solutionFound) {
-            System.out.println("This is Population number: " + attempt);
+            System.out.println("This is Generation number: " + generationNumber);
             nextPopulation();
             solutionFound = isSatisfied();
             if (solutionFound) {
@@ -38,7 +37,7 @@ public class Solver {
                 printCurrentMostSatisfyingSolution();
                 break;
             }
-            attempt++;
+            generationNumber++;
         }
     }
 
@@ -69,7 +68,7 @@ public class Solver {
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population.get(i).clearFitnessScore();
-            population.get(i).mutate(); 
+            population.get(i).mutate();
             population.get(i).assignFitnessScore();
             // sortPopulationByFitnessValue();
         }
@@ -125,6 +124,7 @@ public class Solver {
 
     }
 
+    // TODO only create roulette wheel once per generation
     // Select a pair of chromosomes to crossover
     private Chromosome rouletteWheelSelection() {
         // create the roulette wheel
