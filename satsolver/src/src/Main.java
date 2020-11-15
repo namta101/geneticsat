@@ -1,4 +1,8 @@
+package src;
+
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -14,6 +18,8 @@ public class Main {
     private static long elapsedTime;
 
     public static void main(String[] args) {
+        String currentDir = System.getProperty("user.dir");
+        System.out.println(currentDir);
         startTimer();
         formula = new ArrayList<Clause>();
         readDIMACSFile(args[0]);
@@ -26,7 +32,7 @@ public class Main {
     // information from the file
     private static void readDIMACSFile(String dimacsFileIn) {
         try {
-            File file = new File(dimacsFileIn);
+            File file = new File("satsolver/cnf/" + dimacsFileIn);
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();

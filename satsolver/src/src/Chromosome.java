@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,8 +37,7 @@ public class Chromosome {
     // Return the number of clauses matched
     public int getClausesMatched() {
         int numberOfClausesMatched = 0;
-        for (int i = 0; i < formula.size(); i++) {
-            Clause clause = formula.get(i);
+        for (Clause clause : formula) {
             int[] variables = clause.getVariables();
             boolean isClauseSatisfied = false;
             for (int var : variables) {
