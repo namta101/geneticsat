@@ -1,8 +1,6 @@
 package src;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
