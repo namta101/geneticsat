@@ -10,7 +10,7 @@ public class Chromosome {
     private int[] genes;
     private ArrayList<Clause> formula;
 
-    private final double MUTATION_RATE = 0.06;
+    private double MUTATION_RATE = 0.06;
 
     public Chromosome() {
 
@@ -64,15 +64,18 @@ public class Chromosome {
 
     public void mutate() {
         if (shouldMutate()) {
-            Random rand = new Random();
-            int upperBound = numberOfGenes - 1;
-            int positionToMutate = rand.nextInt(upperBound);
-            if (genes[positionToMutate] == 0) {
-                genes[positionToMutate] = 1;
-            } else {
-                genes[positionToMutate] = 0;
-            }
+            randomSelectionMutate();
+        }
+    }
 
+    public void randomSelectionMutate() {
+        Random rand = new Random();
+        int upperBound = numberOfGenes - 1;
+        int positionToMutate = rand.nextInt(upperBound);
+        if (genes[positionToMutate] == 0) {
+            genes[positionToMutate] = 1;
+        } else {
+            genes[positionToMutate] = 0;
         }
     }
 

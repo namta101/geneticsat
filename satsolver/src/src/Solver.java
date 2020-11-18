@@ -13,22 +13,25 @@ public class Solver {
     private boolean solutionFound;
     private int[] satisfyingSolution;
     private long startTime;
-    private long upperTimeLimit = 50000; //
-    private int generationNumber = 0;
+    private long upperTimeLimit = 10000;
+    private int generationNumber = 1;
 
     public Solver(ArrayList<Clause> formula, int numberOfVariables) {
         population = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         solutionFound = false;
+    }
+
+    public void solve() {
         startTimer();
         initialisePopulation();
-        generationNumber++;
         solutionFound = isSatisfied();
         if (solutionFound) {
             printSatisfyingSolution(satisfyingSolution);
         }
-        while (!solutionFound) {
+        while(!solutionFound) {
+            generationNumber++;
             System.out.println("This is Generation number: " + generationNumber);
             nextPopulation();
             solutionFound = isSatisfied();
@@ -39,16 +42,16 @@ public class Solver {
                 printCurrentMostSatisfyingSolution();
                 break;
             }
-            generationNumber++;
         }
+
     }
 
     // Checks whether there is a satisfying solution, if there is, assigns it to the
     // field variable satisfying solution
     private boolean isSatisfied() {
-        for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getFitnessScore() == formula.size()) {
-                satisfyingSolution = population.get(i).getGenes();
+        for (Chromosome chromosome : population) {
+            if (chromosome.getFitnessScore() == formula.size()) {
+                satisfyingSolution = chromosome.getGenes();
                 return true;
             }
         }
@@ -78,7 +81,7 @@ public class Solver {
     }
 
     // Applies Uniform Crossover and returns breeded offspring
-    private Chromosome crossover() {
+    private Chromosome uniformCrossover() {
 
         int[] parentOneGenes = rouletteWheelSelection().getGenes();
         int[] parentTwoGenes = rouletteWheelSelection().getGenes();
@@ -118,7 +121,7 @@ public class Solver {
         }
 
         for (int i = 0; i < individualsCreated; i++) {
-            Chromosome clonedIndividual = crossover();
+            Chromosome clonedIndividual = uniformCrossover();
             newPopulation.add(clonedIndividual);
         }
 

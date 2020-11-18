@@ -16,12 +16,11 @@ public class Main {
     private static long elapsedTime;
 
     public static void main(String[] args) {
-        String currentDir = System.getProperty("user.dir");
-        System.out.println(currentDir);
         startTimer();
-        formula = new ArrayList<Clause>();
+        formula = new ArrayList<>();
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
+        satSolver.solve();
         stopTimer();
         System.out.println("Completed in: " + elapsedTime + "ms");
     }
@@ -45,7 +44,7 @@ public class Main {
                         System.out.print("Number of clauses: " + numberOfClauses + "\n");
                     } else { // create the formula by inserting the split up clauses into an arraylist
                         String[] clauseLineVariables = line.split("\\s+");
-                        int[] clauseLineVariablesInt = convertStringArrayToIntArray(clauseLineVariables);
+                        int[] clauseLineVariablesInt = Utility.convertStringArrayToIntArray(clauseLineVariables);
                         formula.add(new Clause(clauseLineVariablesInt));
                     }
 
@@ -69,12 +68,4 @@ public class Main {
         elapsedTime = stopTime - startTime;
     }
 
-    public static int[] convertStringArrayToIntArray(String[] stringArray) {
-        int size = stringArray.length;
-        int[] intArray = new int[size];
-        for (int i = 0; i < size; i++) {
-            intArray[i] = Integer.parseInt(stringArray[i]);
-        }
-        return intArray;
-    }
 }

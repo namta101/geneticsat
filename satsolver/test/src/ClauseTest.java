@@ -1,7 +1,6 @@
 package src;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ClauseTest {
@@ -12,12 +11,12 @@ public class ClauseTest {
     }
 
     @Test
-    public void getVariables_nonEmptyVariableArray_returnsOneLessVariableThanClauseCreation() {
+    public void getVariables_validVariablesArray_returnsOneLessVariableThanOnClauseCreation() {
         int[] variables = clause.getVariables();
-        Assertions.assertEquals(variables.length, 3);
-        Assertions.assertEquals(variables[0] , 2);
-        Assertions.assertEquals(variables[1] , 4);
-        Assertions.assertEquals(variables[2] , -1);
+        Assertions.assertEquals(3, variables.length);
+        Assertions.assertEquals(2, variables[0]);
+        Assertions.assertEquals(4, variables[1]);
+        Assertions.assertEquals(-1, variables[2]);
     }
 
 }
