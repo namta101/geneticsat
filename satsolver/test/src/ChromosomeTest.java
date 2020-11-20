@@ -12,18 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ChromosomeTest {
     Chromosome chromosome;
     public ChromosomeTest() {
-        ArrayList<Clause> formula = createFormula();
+        Formula formula = createFormula();
         chromosome = new Chromosome(3, formula);
     }
 
-    public ArrayList<Clause> createFormula() {
-        ArrayList<Clause> formula = new ArrayList<>();
+    public Formula createFormula() {
+        Formula formula = new Formula();
         Clause clause1 = new Clause(new int[]{-1,2,-3,0});
         Clause clause2 = new Clause(new int[]{1,2,-3,0});
         Clause clause3 = new Clause(new int[]{-1,2,3,0});
-        formula.add(clause1);
-        formula.add(clause2);
-        formula.add(clause3);
+        formula.addClause(clause1);
+        formula.addClause(clause2);
+        formula.addClause(clause3);
         return formula;
     }
 

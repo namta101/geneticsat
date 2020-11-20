@@ -8,7 +8,7 @@ public class Chromosome {
     private int numberOfGenes;
     private double fitnessScore;
     private int[] genes;
-    private ArrayList<Clause> formula;
+    private Formula formula;
 
     private double MUTATION_RATE = 0.06;
 
@@ -16,7 +16,7 @@ public class Chromosome {
 
     }
 
-    public Chromosome(int numberOfGenes, ArrayList<Clause> formula) {
+    public Chromosome(int numberOfGenes, Formula formula) {
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
         initialiseGenes();
@@ -37,7 +37,7 @@ public class Chromosome {
     // Return the number of clauses matched
     public int getClausesMatched() {
         int numberOfClausesMatched = 0;
-        for (Clause clause : formula) {
+        for (Clause clause : formula.getClauses()) {
             int[] variables = clause.getVariables();
             boolean isClauseSatisfied = false;
             for (int var : variables) {

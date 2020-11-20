@@ -9,7 +9,7 @@ public class Main {
 
     private static int numberOfClauses;
     private static int numberOfVariables;
-    private static ArrayList<Clause> formula; // Make formula an object
+    private static Formula formula;
 
     private static long startTime;
     private static long stopTime;
@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
         startTimer();
-        formula = new ArrayList<>();
+        formula = new Formula();
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
         satSolver.solve();
@@ -45,7 +45,7 @@ public class Main {
                     } else { // create the formula by inserting the split up clauses into an arraylist
                         String[] clauseLineVariables = line.split("\\s+");
                         int[] clauseLineVariablesInt = Utility.convertStringArrayToIntArray(clauseLineVariables);
-                        formula.add(new Clause(clauseLineVariablesInt));
+                        formula.addClause(new Clause(clauseLineVariablesInt));
                     }
 
                 }

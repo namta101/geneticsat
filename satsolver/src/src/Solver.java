@@ -6,14 +6,14 @@ import java.util.Random;
 
 public class Solver {
     private Population population;
-    private final ArrayList<Clause> formula;
+    private final Formula formula;
     private final int numberOfVariables;
     private boolean solutionFound;
     private long startTime;
     private final long upperTimeLimit = 10000;
     private int generationNumber = 1;
 
-    public Solver(ArrayList<Clause> formula, int numberOfVariables) {
+    public Solver(Formula formula, int numberOfVariables) {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         population = new Population(formula, numberOfVariables);

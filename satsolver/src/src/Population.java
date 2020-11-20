@@ -7,11 +7,11 @@ public class Population {
     private int POPULATION_SIZE = 300;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
-    private ArrayList<Clause> formula;
+    private Formula formula;
     private int numberOfVariables;
     private int[] satisfyingSolution;
 
-    public Population(ArrayList<Clause> formula, int numberOfVariables) {
+    public Population(Formula formula, int numberOfVariables) {
         chromosomes = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
@@ -27,7 +27,7 @@ public class Population {
     // field variable satisfying solution
     public boolean isSatisfied() {
         for (Chromosome chromosome : chromosomes) {
-            if (chromosome.getFitnessScore() == formula.size()) {
+            if (chromosome.getFitnessScore() == formula.getSize()) {
                 satisfyingSolution = chromosome.getGenes();
                 return true;
             }
