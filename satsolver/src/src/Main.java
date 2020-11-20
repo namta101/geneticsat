@@ -9,7 +9,7 @@ public class Main {
 
     private static int numberOfClauses;
     private static int numberOfVariables;
-    private static ArrayList<Clause> formula;
+    private static ArrayList<Clause> formula; // Make formula an object
 
     private static long startTime;
     private static long stopTime;

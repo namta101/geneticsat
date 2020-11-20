@@ -47,31 +47,6 @@ public class Population {
 
     }
 
-    //TODO feed 2 genes into uniform crossover
-    // Applies Uniform Crossover and returns breeded offspring
-    private Chromosome uniformCrossover() {
-
-        int[] parentOneGenes = rouletteWheelSelection().getGenes();
-        int[] parentTwoGenes = rouletteWheelSelection().getGenes();
-        int lengthOfGenes = parentOneGenes.length;
-
-        Chromosome offspring = new Chromosome(numberOfVariables, formula);
-        int[] offspringGenes = new int[lengthOfGenes];
-
-        for (int i = 0; i < lengthOfGenes - 1; i += 2) {
-            if (i == lengthOfGenes) {
-                offspringGenes[i] = parentOneGenes[i];
-                break;
-            }
-            offspringGenes[i] = parentOneGenes[i];
-            offspringGenes[i + 1] = parentTwoGenes[i + 1];
-        }
-
-        offspring.intakeParentsGenes(offspringGenes);
-
-        return offspring;
-    }
-
     private ArrayList<Chromosome> createNewPopulation() {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();
@@ -86,12 +61,45 @@ public class Population {
         }
 
         for (int i = 0; i < individualsCreated; i++) {
-            Chromosome clonedIndividual = uniformCrossover();
+            Chromosome clonedIndividual = applyCrossover();
             newPopulation.add(clonedIndividual);
         }
 
         return newPopulation;
 
+    }
+
+    private Chromosome applyCrossover() {
+
+        int[] parentOneGenes = selectParent().getGenes();
+        int[] parentTwoGenes = selectParent().getGenes();
+        int lengthOfGenes = parentOneGenes.length;
+
+        Chromosome offSpring = uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+
+        return offSpring;
+    }
+
+    private Chromosome uniformCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
+        Chromosome offspring = new Chromosome(numberOfVariables, formula);
+        int[] offspringGenes = new int[lengthOfGenes];
+
+        for (int i = 0; i < lengthOfGenes - 1; i += 2) {
+            if (i == lengthOfGenes) {
+                offspringGenes[i] = parentOneGenes[i];
+                break;
+            }
+            offspringGenes[i] = parentOneGenes[i];
+            offspringGenes[i + 1] = parentTwoGenes[i + 1];
+        }
+
+        offspring.intakeParentsGenes(offspringGenes);
+        return offspring;
+    }
+
+
+    private Chromosome selectParent() {
+        return rouletteWheelSelection();
     }
 
     // TODO only create roulette wheel once per generation
