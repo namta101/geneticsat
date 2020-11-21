@@ -51,7 +51,7 @@ public class Population {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();
 
-        sortPopulationByFitnessValue();
+        sortPopulationByFitnessValue(this.chromosomes);
         double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
         double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
 
@@ -133,12 +133,12 @@ public class Population {
     }
 
     public int[] getCurrentMostSatisfyingSolution(){
-        sortPopulationByFitnessValue();
+        sortPopulationByFitnessValue(this.chromosomes);
         return chromosomes.get(0).getGenes();
     }
 
     public double getCurrentMostSatisfyingSolutionFitnessScore(){
-        sortPopulationByFitnessValue();
+        sortPopulationByFitnessValue(this.chromosomes);
         return chromosomes.get(0).getFitnessScore();
     }
 
@@ -151,7 +151,7 @@ public class Population {
     }
 
     // Sorts the population by their fitness score in descending order
-    private void sortPopulationByFitnessValue() {
+    public void sortPopulationByFitnessValue(ArrayList<Chromosome> chromosomes) {
 
         // System.out.println("before: ");
         // for (int i = 0; i < POPULATION_SIZE; i++) {

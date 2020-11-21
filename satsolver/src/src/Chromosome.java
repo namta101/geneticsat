@@ -64,22 +64,12 @@ public class Chromosome {
 
     public void mutate() {
         if (shouldMutate()) {
-            randomSelectionMutate();
+            randomSelectionMutate(this.genes);
         }
     }
 
-    public void randomSelectionMutate() {
-        Random rand = new Random();
-        int upperBound = numberOfGenes - 1;
-        int positionToMutate = rand.nextInt(upperBound);
-        if (genes[positionToMutate] == 0) {
-            genes[positionToMutate] = 1;
-        } else {
-            genes[positionToMutate] = 0;
-        }
-    }
 
-    public int[] randomSelectionMutate2(int[] genes) {
+    public int[] randomSelectionMutate(int[] genes) {
         Random rand = new Random();
         int upperBound = numberOfGenes - 1;
         int positionToMutate = rand.nextInt(upperBound);

@@ -34,8 +34,8 @@ public class ChromosomeTest {
 
     @Test
     public void randomSelectionMutate_ranOnce_AltersOneGene() {
-        int[] preMutatedGenes = new int[]{0,1,0}; // taken from setUpMethod - replicates actual gene
-        chromosome.randomSelectionMutate();
+        int[] preMutatedGenes = new int[]{1,1,1};
+        chromosome.randomSelectionMutate(chromosome.getGenes());
         int[] postMutatedGenes = chromosome.getGenes();
 
         int numberOfGenesMutated = 0;
@@ -44,7 +44,6 @@ public class ChromosomeTest {
                 numberOfGenesMutated++;
             }
         }
-
         Assertions.assertEquals(1, numberOfGenesMutated);
     }
 

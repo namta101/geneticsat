@@ -34,6 +34,23 @@ public class PopulationTest {
 
         }
     }
+
+    @Test
+    public void sortByFitnessValue_SortsChromosomesInOrderOfFitnessValueDescending() {
+        population.initialisePopulation();
+
+        population.sortPopulationByFitnessValue(population.getChromosomes());
+
+        for (int i = 0; i < population.getChromosomes().size()-1; i++) {
+            if (population.getChromosomes().get(i).getFitnessScore() >= population.getChromosomes().get(i+1).getFitnessScore()) {
+                // continue
+            }
+            else {
+                Assertions.fail();
+            }
+        }
+
+    }
 }
 
 
