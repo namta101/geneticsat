@@ -79,6 +79,18 @@ public class Chromosome {
         }
     }
 
+    public int[] randomSelectionMutate2(int[] genes) {
+        Random rand = new Random();
+        int upperBound = numberOfGenes - 1;
+        int positionToMutate = rand.nextInt(upperBound);
+        if (genes[positionToMutate] == 0) {
+            genes[positionToMutate] = 1;
+        } else {
+            genes[positionToMutate] = 0;
+        }
+        return genes;
+    }
+
     private boolean shouldMutate() {
         double randomNumber = Math.random();
         return (randomNumber <= MUTATION_RATE);

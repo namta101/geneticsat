@@ -12,24 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ChromosomeTest {
     Chromosome chromosome;
     public ChromosomeTest() {
-        Formula formula = createFormula();
+        Formula formula = TestHelper.createFormula();
         chromosome = new Chromosome(3, formula);
-    }
-
-    public Formula createFormula() {
-        Formula formula = new Formula();
-        Clause clause1 = new Clause(new int[]{-1,2,-3,0});
-        Clause clause2 = new Clause(new int[]{1,2,-3,0});
-        Clause clause3 = new Clause(new int[]{-1,2,3,0});
-        formula.addClause(clause1);
-        formula.addClause(clause2);
-        formula.addClause(clause3);
-        return formula;
     }
 
     @BeforeEach
     void setUp() {
-        chromosome.intakeParentsGenes(new int[]{0,1,0});
+        chromosome.intakeParentsGenes(new int[]{1,1,1});
     }
 
     @Test
@@ -40,7 +29,7 @@ public class ChromosomeTest {
     @Test
     public void getClausesMatched_validClauseChromosome_returnsCorrectNumberOfClausesMatched() {
         int clausesMatched = chromosome.getClausesMatched();
-        Assertions.assertEquals(3, clausesMatched);
+        Assertions.assertEquals(7, clausesMatched);
     }
 
     @Test

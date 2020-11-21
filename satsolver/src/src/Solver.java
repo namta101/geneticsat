@@ -9,6 +9,7 @@ public class Solver {
     private final Formula formula;
     private final int numberOfVariables;
     private boolean solutionFound;
+    private int[] satisfyingSolution;
     private long startTime;
     private final long upperTimeLimit = 10000;
     private int generationNumber = 1;
@@ -20,11 +21,12 @@ public class Solver {
         solutionFound = false;
     }
 
-    public void solve() {
+    public int[] solve() {
         startTimer();
         population.initialisePopulation();
         solutionFound = population.isSatisfied();
         if (solutionFound) {
+            satisfyingSolution = population.getSatisfyingSolution();
             printSatisfyingSolution();
         }
         while(!solutionFound) {
@@ -34,17 +36,19 @@ public class Solver {
             solutionFound = population.isSatisfied();
             if (solutionFound) {
                 printSatisfyingSolution();
+                satisfyingSolution = population.getSatisfyingSolution();
             }
             if (upperTimeLimitReached()) {
                 printCurrentMostSatisfyingSolution();
                 break;
             }
         }
+        return population.getCurrentMostSatisfyingSolution();
 
     }
 
     private void printSatisfyingSolution() {
-        System.out.println("Solution satisfied: " + Arrays.toString(population.getCurrentMostSatisfyingSolution()));
+        System.out.println("Solution satisfied: " + Arrays.toString(population.getSatisfyingSolution()));
     }
 
 

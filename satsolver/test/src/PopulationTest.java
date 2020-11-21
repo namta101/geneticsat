@@ -2,21 +2,39 @@ package src;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+
+import java.util.Arrays;
 
 public class PopulationTest {
-    private Clause clause;
+    private Population population;
 
     public PopulationTest() {
-        clause = new Clause(new int[]{2,4,-1,0});
+        Formula formula = TestHelper.createFormula();
+        population = new Population(formula, 3);
     }
 
     @Test
-    public void getVariables_validVariablesArray_returnsOneLessVariableThanOnClauseCreation() {
-        int[] variables = clause.getVariables();
-        Assertions.assertEquals(3, variables.length);
-        Assertions.assertEquals(2, variables[0]);
-        Assertions.assertEquals(4, variables[1]);
-        Assertions.assertEquals(-1, variables[2]);
+    public void initialisePopulation_createsCreatesPopulationSizeNumberOfChromosomes() {
+        population.initialisePopulation();
+        Assertions.assertEquals(Population.POPULATION_SIZE, population.getChromosomes().size());
+
     }
 
+    // Correct solution is 1,1,1
+    @Test
+    public void isSatisfied_onEasySatInstances_returnsTrue() {
+        population.initialisePopulation();
+        boolean solutionFound = population.isSatisfied();
+        int[] correctSolution = new int[]{1, 1, 1};
+        if (solutionFound) {
+            if (!Arrays.equals(correctSolution, population.getSatisfyingSolution())) {
+                Assertions.fail();
+            }
+
+        }
+    }
 }
+
+
+

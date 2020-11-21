@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Population {
-    private int POPULATION_SIZE = 300;
+    public static final int POPULATION_SIZE = 300;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
@@ -128,6 +128,10 @@ public class Population {
 
     }
 
+    public ArrayList<Chromosome> getChromosomes(){
+        return this.chromosomes;
+    }
+
     public int[] getCurrentMostSatisfyingSolution(){
         sortPopulationByFitnessValue();
         return chromosomes.get(0).getGenes();
@@ -173,3 +177,4 @@ public class Population {
    }
 
 }
+
