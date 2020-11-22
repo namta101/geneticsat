@@ -6,7 +6,11 @@ public class Clause {
     private int[] variables;
 
     public Clause(int[] variables) {
-        this.variables = Arrays.copyOf(variables, variables.length - 1); // Get rid of the 0 on the end 
+        if (variables[variables.length - 1] == 0) {
+            this.variables = Arrays.copyOf(variables, variables.length - 1); // Get rid of the 0 on the end
+        } else {
+            this.variables = variables;
+        }
     }
 
     public int[] getVariables() {
