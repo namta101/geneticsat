@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Population {
-    public static final int POPULATION_SIZE = 291;
+    public static final int POPULATION_SIZE = 500;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
@@ -12,7 +12,7 @@ public class Population {
     private int[] satisfyingSolution;
     private double currentGenerationTotalFitnessScore;
     private double [] rouletteWheel;
-    private double [] rankBoard;
+    private double [] rankBoard; // put into own class - parent selector, takes in population,
     private GACombination.ParentSelection parentSelectionMethod;
 
     public Population(Formula formula, int numberOfVariables) {
@@ -25,7 +25,7 @@ public class Population {
     }
 
     public void setCombinationOfGAMethodsToUse() {
-        parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
+        parentSelectionMethod = GACombination.ParentSelection.Rank;
         // If we choose rank selection, we want to  be able to create enough ranks for this to be feasible
         if (parentSelectionMethod == GACombination.ParentSelection.Rank && POPULATION_SIZE < 300 ) {
             parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
@@ -70,7 +70,6 @@ public class Population {
 
         this.rouletteWheel = createRouletteWheel();
         this.rankBoard = createRankBoard();
-        chooseRank();
 
         double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
         double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
@@ -122,7 +121,8 @@ public class Population {
         switch (parentSelectionMethod) {
             case RouletteWheel:
                 return rouletteWheelSelection();
-
+            case Rank:
+                return rankBoardSelection();
             default:
                 return rouletteWheelSelection();
         }
@@ -160,6 +160,29 @@ public class Population {
         return newRouletteWheel;
     }
 
+    public Chromosome rankBoardSelection() {
+        int rankToChoose = chooseRank();
+        int positionInRank = new Random().nextInt(10); // selects random chromosome in rank
+        int indexOfChromosomeToChoose = (rankToChoose * 10) + positionInRank;
+        return chromosomes.get(indexOfChromosomeToChoose);
+    }
+
+    public int chooseRank() {
+        Random rand = new Random();
+        double positionOfRank = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble());
+        int indexOfRankToChoose = 0;
+        double currentTotal = 0;
+        for(int i = 0; i<rankBoard.length; i++) {
+            currentTotal = currentTotal + rankBoard[i];
+            if(currentTotal>=positionOfRank) {
+                indexOfRankToChoose = i;
+                break;
+            }
+        }
+
+        return indexOfRankToChoose;
+    }
+
     public double[] createRankBoard() {
         int groupSize = 10;
         int numberOfRanks = (POPULATION_SIZE + groupSize - 1 ) / groupSize; // round the integer up
@@ -188,22 +211,7 @@ public class Population {
         return rankBoard;
     }
 
-    public int chooseRank() {
-        Random rand = new Random();
-        double positionOfRank = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble());
-        int indexOfRankToChoose = 0;
-        double currentTotal = 0;
-        for(int i = 0; i<rankBoard.length; i++) {
-            currentTotal = currentTotal + rankBoard[i];
-            if(currentTotal>=positionOfRank) {
-                indexOfRankToChoose = i;
-                break;
-            }
-        }
 
-        return indexOfRankToChoose;
-
-    }
 
 
     public ArrayList<Chromosome> getChromosomes(){
