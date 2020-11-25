@@ -11,26 +11,17 @@ public class Population {
     private int numberOfVariables;
     private int[] satisfyingSolution;
     private double currentGenerationTotalFitnessScore;
-    private double [] rouletteWheel;
-    private double [] rankBoard; // put into own class - parent selector, takes in population,
-    private GACombination.ParentSelection parentSelectionMethod;
+    private ParentSelector parentSelector;
+
 
     public Population(Formula formula, int numberOfVariables) {
         chromosomes = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
-        setCombinationOfGAMethodsToUse();
-        rouletteWheel = new double[POPULATION_SIZE];
-        rankBoard = new double[(POPULATION_SIZE + 10 - 1) / 10];
+        parentSelector = new ParentSelector();
     }
 
-    public void setCombinationOfGAMethodsToUse() {
-        parentSelectionMethod = GACombination.ParentSelection.Rank;
-        // If we choose rank selection, we want to  be able to create enough ranks for this to be feasible
-        if (parentSelectionMethod == GACombination.ParentSelection.Rank && POPULATION_SIZE < 300 ) {
-            parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
-        }
-    }
+
 
     public void initialisePopulation() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -52,6 +43,7 @@ public class Population {
 
     public void nextPopulation() {
         currentGenerationTotalFitnessScore = totalPopulationFitnessScore();
+        sortPopulationByFitnessValue(this.chromosomes);
         chromosomes = createNewPopulation();
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -66,10 +58,8 @@ public class Population {
     private ArrayList<Chromosome> createNewPopulation() {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();
-        sortPopulationByFitnessValue(this.chromosomes);
 
-        this.rouletteWheel = createRouletteWheel();
-        this.rankBoard = createRankBoard();
+        parentSelector.setUpForGeneration(chromosomes);
 
         double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
         double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
@@ -90,12 +80,11 @@ public class Population {
 
     private Chromosome applyCrossover() {
 
-        int[] parentOneGenes = selectParent().getGenes();
-        int[] parentTwoGenes = selectParent().getGenes();
+        int[] parentOneGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
+        int[] parentTwoGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
         int lengthOfGenes = parentOneGenes.length;
 
         Chromosome offSpring = uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
-
         return offSpring;
     }
 
@@ -116,104 +105,6 @@ public class Population {
         return offspring;
     }
 
-
-    private Chromosome selectParent() {
-        switch (parentSelectionMethod) {
-            case RouletteWheel:
-                return rouletteWheelSelection();
-            case Rank:
-                return rankBoardSelection();
-            default:
-                return rouletteWheelSelection();
-        }
-    }
-
-    // Select a pair of chromosomes to crossover
-    private Chromosome rouletteWheelSelection() {
-        int indexOfChromosomeToChoose = 0;
-        Random rand = new Random();
-        double positionOnRouletteWheel = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble()); // values from 1 to total
-        double currentTotal = 0;
-        for (int i = 0; i < rouletteWheel.length; i++) {
-            currentTotal = currentTotal + rouletteWheel[i];
-            if (currentTotal >= positionOnRouletteWheel) {
-                indexOfChromosomeToChoose = i;
-                break;
-            }
-
-        }
-
-        return chromosomes.get(indexOfChromosomeToChoose);
-
-    }
-
-
-    public double[] createRouletteWheel() {
-        double[] newRouletteWheel = new double[POPULATION_SIZE];
-        double rouletteTotal = 0;
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            double chromosomeFitness = chromosomes.get(i).getFitnessScore();
-            rouletteTotal = rouletteTotal + chromosomeFitness;
-            newRouletteWheel[i] = rouletteTotal;
-        }
-
-        return newRouletteWheel;
-    }
-
-    public Chromosome rankBoardSelection() {
-        int rankToChoose = chooseRank();
-        int positionInRank = new Random().nextInt(10); // selects random chromosome in rank
-        int indexOfChromosomeToChoose = (rankToChoose * 10) + positionInRank;
-        return chromosomes.get(indexOfChromosomeToChoose);
-    }
-
-    public int chooseRank() {
-        Random rand = new Random();
-        double positionOfRank = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble());
-        int indexOfRankToChoose = 0;
-        double currentTotal = 0;
-        for(int i = 0; i<rankBoard.length; i++) {
-            currentTotal = currentTotal + rankBoard[i];
-            if(currentTotal>=positionOfRank) {
-                indexOfRankToChoose = i;
-                break;
-            }
-        }
-
-        return indexOfRankToChoose;
-    }
-
-    public double[] createRankBoard() {
-        int groupSize = 10;
-        int numberOfRanks = (POPULATION_SIZE + groupSize - 1 ) / groupSize; // round the integer up
-        double[] rankBoard = new double[numberOfRanks];
-        int rank = 0;
-        for(int i = 0; i<POPULATION_SIZE-groupSize; i += groupSize) { //Do not calculate final rank
-            for(int j=0; j<10; j++) {
-                rankBoard[rank] = rankBoard[rank] + chromosomes.get(i).getFitnessScore();
-            }
-            rank++;
-        }
-
-        int numberOfMembersInLastRank = POPULATION_SIZE%groupSize;
-
-        if(numberOfMembersInLastRank != 0) { // means number of members is not equal to groupsize
-            for (int i = 0; i < numberOfMembersInLastRank; i++) {
-                rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(POPULATION_SIZE - groupSize + i).getFitnessScore();
-            }
-            double averageFitness = rankBoard[numberOfRanks-1] / numberOfMembersInLastRank;
-            rankBoard[numberOfRanks-1] = averageFitness * 10;
-        }  else {
-            for(int i =0; i< groupSize; i++) {
-                rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(POPULATION_SIZE - groupSize + i).getFitnessScore();
-            }
-        }
-        return rankBoard;
-    }
-
-
-
-
     public ArrayList<Chromosome> getChromosomes(){
         return this.chromosomes;
     }
@@ -226,6 +117,10 @@ public class Population {
     public double getCurrentMostSatisfyingSolutionFitnessScore(){
         sortPopulationByFitnessValue(this.chromosomes);
         return chromosomes.get(0).getFitnessScore();
+    }
+
+    public double getCurrentGenerationTotalFitnessScore() {
+        return this.currentGenerationTotalFitnessScore;
     }
 
     private double totalPopulationFitnessScore() {
