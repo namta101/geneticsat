@@ -98,6 +98,7 @@ public class ParentSelector {
         return indexOfRankToChoose;
     }
 
+    // Create the rank board depending on the fitness score of each of the chromosomes and number of chromosomes we want in each rank
     public double[] createRankBoard(ArrayList<Chromosome> chromosomes) {
         int numberOfRanks = (Population.POPULATION_SIZE+ numberOfChromosomesInEachRank - 1 ) / numberOfChromosomesInEachRank; // round the integer up
         double[] rankBoard = new double[numberOfRanks];
@@ -109,19 +110,26 @@ public class ParentSelector {
             rank++;
         }
 
+        // Calculating the last rank needs to be done differently
+        // If we have 101 chromosomes in the population, and each rank has 10 chromosomes, the last rank will have 1 chromosome not 10!
+        // This means we have to calculate an average of the fitness score for the remainder chromosomes
         int numberOfMembersInLastRank = Population.POPULATION_SIZE%numberOfChromosomesInEachRank;
 
-        if(numberOfMembersInLastRank != 0) { // means number of members is not equal to numberOfMembersInEachRank
+        if(numberOfMembersInLastRank != 0) { // means there will be chromosomes left over after grouping (the remainder)
             for (int i = 0; i < numberOfMembersInLastRank; i++) {
                 rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
             }
             double averageFitness = rankBoard[numberOfRanks-1] / numberOfMembersInLastRank;
             rankBoard[numberOfRanks-1] = averageFitness * 10;
-        }  else {
+        }  else { // Otherwise calculate final rank as usual
             for(int i =0; i< numberOfChromosomesInEachRank; i++) {
                 rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
             }
         }
         return rankBoard;
+    }
+
+    public int getNumberOfChromosomesInEachRank() {
+        return this.numberOfChromosomesInEachRank;
     }
 }

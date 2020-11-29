@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Population {
-    public static final int POPULATION_SIZE = 500;
+    public static final int POPULATION_SIZE = 502;
     private double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
@@ -42,7 +42,7 @@ public class Population {
     }
 
     public void nextPopulation() {
-        currentGenerationTotalFitnessScore = totalPopulationFitnessScore();
+        setCurrentGenerationTotalFitnessScore();
         sortPopulationByFitnessValue(this.chromosomes);
         chromosomes = createNewPopulation();
 
@@ -61,6 +61,7 @@ public class Population {
 
         parentSelector.setUpForGeneration(chromosomes);
 
+        // Keeps number of parents depending on ELITISM_RATE
         double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
         double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
 
@@ -78,6 +79,7 @@ public class Population {
 
     }
 
+    // Creates a chromosome by choosing two parents to crossover
     private Chromosome applyCrossover() {
 
         int[] parentOneGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
@@ -121,6 +123,10 @@ public class Population {
 
     public double getCurrentGenerationTotalFitnessScore() {
         return this.currentGenerationTotalFitnessScore;
+    }
+
+    public void setCurrentGenerationTotalFitnessScore() {
+        this.currentGenerationTotalFitnessScore = totalPopulationFitnessScore();
     }
 
     private double totalPopulationFitnessScore() {
