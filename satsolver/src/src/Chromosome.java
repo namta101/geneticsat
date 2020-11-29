@@ -9,14 +9,16 @@ public class Chromosome {
     private double fitnessScore;
     private int[] genes;
     private Formula formula;
+    private Mutator mutator;
 
-    private double MUTATION_RATE = 0.06;
+    private double MUTATION_RATE = 0.5;
 
     public Chromosome(int numberOfGenes, Formula formula) {
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
         initialiseGenes();
         assignFitnessScore();
+        mutator = new Mutator();
     }
 
     private void initialiseGenes() {
@@ -63,21 +65,8 @@ public class Chromosome {
 
     public void mutate() {
         if (shouldMutate()) {
-            randomSelectionMutate(this.genes);
+            mutator.mutate(this.genes);
         }
-    }
-
-
-    public int[] randomSelectionMutate(int[] genes) {
-        Random rand = new Random();
-        int upperBound = numberOfGenes - 1;
-        int positionToMutate = rand.nextInt(upperBound);
-        if (genes[positionToMutate] == 0) {
-            genes[positionToMutate] = 1;
-        } else {
-            genes[positionToMutate] = 0;
-        }
-        return genes;
     }
 
     private boolean shouldMutate() {

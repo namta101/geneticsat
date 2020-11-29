@@ -12,6 +12,7 @@ public class Population {
     private int[] satisfyingSolution;
     private double currentGenerationTotalFitnessScore;
     private ParentSelector parentSelector;
+    private ParentCrossover parentCrossover;
 
 
     public Population(Formula formula, int numberOfVariables) {
@@ -19,6 +20,7 @@ public class Population {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         parentSelector = new ParentSelector();
+        parentCrossover = new ParentCrossover(formula, numberOfVariables);
     }
 
 
@@ -86,25 +88,8 @@ public class Population {
         int[] parentTwoGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
         int lengthOfGenes = parentOneGenes.length;
 
-        Chromosome offSpring = uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+        Chromosome offSpring = parentCrossover.crossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
         return offSpring;
-    }
-
-    private Chromosome uniformCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
-        Chromosome offspring = new Chromosome(numberOfVariables, formula);
-        int[] offspringGenes = new int[lengthOfGenes];
-
-        for (int i = 0; i < lengthOfGenes - 1; i += 2) {
-            if (i == lengthOfGenes) {
-                offspringGenes[i] = parentOneGenes[i];
-                break;
-            }
-            offspringGenes[i] = parentOneGenes[i];
-            offspringGenes[i + 1] = parentTwoGenes[i + 1];
-        }
-
-        offspring.intakeParentsGenes(offspringGenes);
-        return offspring;
     }
 
     public ArrayList<Chromosome> getChromosomes(){

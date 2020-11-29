@@ -32,20 +32,6 @@ public class ChromosomeTest {
         Assertions.assertEquals(7, clausesMatched);
     }
 
-    @Test
-    public void randomSelectionMutate_ranOnce_AltersOneGene() {
-        int[] preMutatedGenes = new int[]{1,1,1};
-        chromosome.randomSelectionMutate(chromosome.getGenes());
-        int[] postMutatedGenes = chromosome.getGenes();
-
-        int numberOfGenesMutated = 0;
-        for(int i=0; i<preMutatedGenes.length; i++){
-            if(preMutatedGenes[i] != postMutatedGenes[i]) {
-                numberOfGenesMutated++;
-            }
-        }
-        Assertions.assertEquals(1, numberOfGenesMutated);
-    }
 
     @Test
     public void clearFitnessScore_SetsChromosomeFitnessScoreTo0() {
