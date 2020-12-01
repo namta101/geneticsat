@@ -4,11 +4,12 @@ public class GACombination {
 
     public enum ParentSelection {
                     RouletteWheel,
-                    Rank
+                    Rank,
     }
 
     public enum Mutation {
-        Random
+        Random,
+        Greedy
     }
 
     public enum Crossover {

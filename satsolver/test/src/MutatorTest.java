@@ -7,7 +7,7 @@ public class MutatorTest {
     private Mutator mutator;
 
     public MutatorTest() {
-        mutator = new Mutator();
+        mutator = new Mutator(TestHelper.createFormula());
     }
 
     @Test

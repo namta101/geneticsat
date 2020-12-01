@@ -4,14 +4,19 @@ import java.util.Random;
 
 public class Mutator {
     private GACombination.Mutation mutationMethod;
+    private Formula formula;
 
-    public Mutator() {
-        mutationMethod = GACombination.Mutation.Random;
+    public Mutator(Formula formula) {
+        this.formula = formula;
+        mutationMethod = GACombination.Mutation.Greedy;
     }
 
     public void mutate(int[] genes) {
-        switch (mutationMethod) {
-            case Random: randomMutation(genes);
+        switch (mutationMethod.name()) {
+            case "Random": randomMutation(genes);
+            break;
+            case "Greedy": greedyMutation(genes);
+            break;
         }
     }
 
@@ -23,6 +28,28 @@ public class Mutator {
             genes[positionToMutate] = 1;
         } else {
             genes[positionToMutate] = 0;
+        }
+    }
+
+    public void greedyMutation(int[] genes) {
+        for (int i = 0; i<genes.length; i++) {
+            double preMutateFitnessScore = formula.getClausesMatched(genes);
+            int[] postMutatedGenes;
+            postMutatedGenes = genes.clone();
+            if (postMutatedGenes[i] == 0) {
+                postMutatedGenes[i] = 1;
+            } else {
+                postMutatedGenes[i] = 0;
+            }
+            double postMutateFitnessScore = formula.getClausesMatched(postMutatedGenes);
+            if(postMutateFitnessScore>preMutateFitnessScore) {
+                if (genes[i] == 0) {
+                    genes[i] = 1;
+                } else {
+                    genes[i] = 0;
+                }
+            }
+
         }
     }
 
