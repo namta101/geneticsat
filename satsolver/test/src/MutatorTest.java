@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MutatorTest {
+    private Formula formula;
     private Mutator mutator;
 
     public MutatorTest() {
-        mutator = new Mutator(TestHelper.createFormula());
+        formula = TestHelper.createFormula();
+        mutator = new Mutator(formula);
     }
 
     @Test
@@ -24,4 +26,19 @@ public class MutatorTest {
         }
         Assertions.assertEquals(1, numberOfGenesMutated);
     }
+
+    @Test
+    public void greedyMutation_doesNotDecreaseFitnessScore() {
+        int[] preMutatedGenes = new int[]{1,1,0};
+        int[] genesToMutate = new int[]{1,1,0};
+
+        mutator.greedyMutation(genesToMutate);
+
+        int preMutatedGenesFitnessScore = formula.getClausesMatched(preMutatedGenes);
+        int postMutatedGenesFitnessScore = formula.getClausesMatched(genesToMutate);
+
+        Assertions.assertTrue(postMutatedGenesFitnessScore>=preMutatedGenesFitnessScore);
+
+    }
+
 }

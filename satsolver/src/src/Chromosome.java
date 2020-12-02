@@ -11,7 +11,7 @@ public class Chromosome {
     private Formula formula;
     private Mutator mutator;
 
-    private double MUTATION_RATE = 1.0;
+    private double MUTATION_RATE = 0.2;
 
     public Chromosome(int numberOfGenes, Formula formula, Mutator mutator) {
         this.formula = formula;

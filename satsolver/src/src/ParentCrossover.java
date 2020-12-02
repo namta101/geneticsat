@@ -4,10 +4,12 @@ public class ParentCrossover {
     private Formula formula;
     private int numberOfVariables;
     private GACombination.Crossover crossoverMethod;
+    private Mutator mutator;
 
-    public ParentCrossover(Formula formula, int numberOfVariables) {
+    public ParentCrossover(Formula formula, int numberOfVariables, Mutator mutator) {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
+        this.mutator = mutator;
         crossoverMethod = GACombination.Crossover.Uniform;
     }
 
@@ -21,7 +23,7 @@ public class ParentCrossover {
     }
 
     public Chromosome uniformCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
-        Chromosome offspring = new Chromosome(numberOfVariables, formula);
+        Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];
 
         for (int i = 0; i < lengthOfGenes - 1; i += 2) {

@@ -11,6 +11,7 @@ public class Population {
     private int numberOfVariables;
     private int[] satisfyingSolution;
     private double currentGenerationTotalFitnessScore;
+    private Mutator mutator;
     private ParentSelector parentSelector;
     private ParentCrossover parentCrossover;
 
@@ -19,15 +20,14 @@ public class Population {
         chromosomes = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
+        mutator = new Mutator(formula);
         parentSelector = new ParentSelector();
-        parentCrossover = new ParentCrossover(formula, numberOfVariables);
+        parentCrossover = new ParentCrossover(formula, numberOfVariables, mutator);
     }
-
-
 
     public void initialisePopulation() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            chromosomes.add(new Chromosome(numberOfVariables, formula));
+            chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
         }
     }
 
