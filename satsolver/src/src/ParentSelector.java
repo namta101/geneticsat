@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ParentSelector {
-    private double [] rouletteWheel;
+    private double[] rouletteWheel;
     private double[] rankBoard;
     private int numberOfChromosomesInEachRank = 10;
     private GACombination.ParentSelection parentSelectionMethod;
@@ -14,10 +14,10 @@ public class ParentSelector {
     }
 
     public void setUpForGeneration(ArrayList<Chromosome> chromosomes) {
-        switch (parentSelectionMethod) {
-            case RouletteWheel:
+        switch (parentSelectionMethod.name()) {
+            case "RouletteWheel":
                 setRouletteWheel(chromosomes);
-            case Rank:
+            case "Rank":
                 setRankBoard(chromosomes);
             default:
                 System.out.println("Error in choosing parent selection method");

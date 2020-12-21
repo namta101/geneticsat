@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Population {
     public static final int POPULATION_SIZE = 502;
-    private double ELITISM_RATE = 0.8;
+    public static final double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
@@ -106,15 +106,16 @@ public class Population {
         return chromosomes.get(0).getFitnessScore();
     }
 
+    public void setCurrentGenerationTotalFitnessScore() {
+        this.currentGenerationTotalFitnessScore = getTotalPopulationFitnessScore();
+    }
+
     public double getCurrentGenerationTotalFitnessScore() {
         return this.currentGenerationTotalFitnessScore;
     }
 
-    public void setCurrentGenerationTotalFitnessScore() {
-        this.currentGenerationTotalFitnessScore = totalPopulationFitnessScore();
-    }
 
-    private double totalPopulationFitnessScore() {
+    private double getTotalPopulationFitnessScore() {
         double total = 0;
         for (int i = 0; i < POPULATION_SIZE; i++) {
             total = total + chromosomes.get(i).getFitnessScore();

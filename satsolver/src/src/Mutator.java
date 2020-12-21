@@ -8,7 +8,7 @@ public class Mutator {
 
     public Mutator(Formula formula) {
         this.formula = formula;
-        mutationMethod = GACombination.Mutation.Greedy;
+        mutationMethod = GACombination.Mutation.Random;
     }
 
     public void mutate(int[] genes) {

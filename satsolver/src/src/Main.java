@@ -26,9 +26,9 @@ public class Main {
 
     // Reads the inputted DIMACS file, and populates the class variables with the
     // information from the file
-    private static void readDIMACSFile(String dimacsFileIn) {
+    private static void readDIMACSFile(String dimacsFile) {
         try {
-            File file = new File("satsolver/cnf/" + dimacsFileIn);
+            File file = new File("satsolver/cnf/" + dimacsFile);
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();

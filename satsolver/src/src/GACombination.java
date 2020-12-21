@@ -13,7 +13,8 @@ public class GACombination {
     }
 
     public enum Crossover {
-        Uniform
+        Uniform,
+        TwoPoint
     }
 
 }

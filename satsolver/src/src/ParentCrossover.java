@@ -1,5 +1,7 @@
 package src;
 
+import java.util.Random;
+
 public class ParentCrossover {
     private Formula formula;
     private int numberOfVariables;
@@ -10,13 +12,15 @@ public class ParentCrossover {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         this.mutator = mutator;
-        crossoverMethod = GACombination.Crossover.Uniform;
+        crossoverMethod = GACombination.Crossover.TwoPoint;
     }
 
     public Chromosome crossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
-        switch (crossoverMethod) {
-            case Uniform:
+        switch (crossoverMethod.name()) {
+            case "Uniform":
                 return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+            case "TwoPoint":
+                return twoPointCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
 
         }
         return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
@@ -36,6 +40,29 @@ public class ParentCrossover {
 
         offspring.intakeParentsGenes(offspringGenes);
         return offspring;
+    }
+
+    public Chromosome twoPointCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
+        Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
+        int[] offspringGenes = new int[lengthOfGenes];
+
+        Random rand = new Random();
+        int pointOne = rand.nextInt(lengthOfGenes-1);
+        int pointTwo = rand.nextInt(lengthOfGenes-1);
+
+        for(int i = 0; i<pointOne; i++) {
+            offspringGenes[i] = parentOneGenes[i];
+        }
+        for(int i = pointOne; i<pointTwo; i++) {
+            offspringGenes[i] = parentTwoGenes[i];
+        }
+        for(int i = pointTwo; i<lengthOfGenes; i++) {
+            offspringGenes[i] = parentOneGenes[i];
+        }
+
+        offspring.intakeParentsGenes(offspringGenes);
+        return offspring;
+
     }
 
 
