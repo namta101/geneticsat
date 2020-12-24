@@ -11,7 +11,9 @@ public class Solver {
     private boolean solutionFound;
     private int[] satisfyingSolution;
     private long startTime;
-    private final long upperTimeLimit = 10000;
+    private long restartTimeTracker;
+    private final long upperTimeLimit = 50000;
+    private final long timeBeforeEachRestart = 5000;
     private int generationNumber = 1;
 
     public Solver(Formula formula, int numberOfVariables) {
@@ -23,6 +25,7 @@ public class Solver {
 
     public int[] solve() {
         startTimer();
+        resetRestartTracker();
         population.initialisePopulation();
         solutionFound = population.isSatisfied();
         if (solutionFound) {
@@ -30,21 +33,35 @@ public class Solver {
             printSatisfyingSolution();
         }
         while(!solutionFound) {
-            generationNumber++;
-            System.out.println("This is Generation number: " + generationNumber);
-            population.nextPopulation();
-            solutionFound = population.isSatisfied();
-            if (solutionFound) {
-                printSatisfyingSolution();
-                satisfyingSolution = population.getSatisfyingSolution();
-            }
+           processAlgorithm();
+           if(shouldRestartAlgorithm()) {
+               restartAlgorithm();
+           }
             if (upperTimeLimitReached()) {
                 printCurrentMostSatisfyingSolution();
                 break;
             }
         }
         return population.getCurrentMostSatisfyingSolution();
+    }
 
+    public void processAlgorithm(){
+        generationNumber++;
+        System.out.println("This is Generation number: " + generationNumber);
+        population.nextPopulation();
+        solutionFound = population.isSatisfied();
+        if (solutionFound) {
+            printSatisfyingSolution();
+            satisfyingSolution = population.getSatisfyingSolution();
+        }
+    }
+
+    public void restartAlgorithm() {
+        System.out.println("Restarting algorithm");
+        population.clearPopulation();
+        population.initialisePopulation();
+        generationNumber = 0;
+        resetRestartTracker();
     }
 
     private void printSatisfyingSolution() {
@@ -62,6 +79,12 @@ public class Solver {
     private void startTimer() {
         this.startTime = System.currentTimeMillis();
     }
+
+    private boolean shouldRestartAlgorithm() {
+        return (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
+    }
+
+    private void resetRestartTracker() {this.restartTimeTracker = System.currentTimeMillis();}
 
     private boolean upperTimeLimitReached() {
         System.out.println("Time: " + (System.currentTimeMillis() - startTime));

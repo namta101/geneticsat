@@ -17,10 +17,12 @@ public class ParentSelector {
         switch (parentSelectionMethod.name()) {
             case "RouletteWheel":
                 setRouletteWheel(chromosomes);
+                break;
             case "Rank":
                 setRankBoard(chromosomes);
+                break;
             default:
-                System.out.println("Error in choosing parent selection method");
+                System.out.println("Error choosing parent selection method");
         }
     }
 

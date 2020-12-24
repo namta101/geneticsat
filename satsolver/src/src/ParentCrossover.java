@@ -21,6 +21,8 @@ public class ParentCrossover {
                 return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
             case "TwoPoint":
                 return twoPointCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+            default:
+                System.out.println("Error in choosing crossover method");
 
         }
         return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);

@@ -31,6 +31,10 @@ public class Population {
         }
     }
 
+    public void clearPopulation(){
+        chromosomes = new ArrayList<>();
+    }
+
     // Checks whether there is a satisfying solution, if there is, assigns it to the
     // field variable satisfying solution
     public boolean isSatisfied() {

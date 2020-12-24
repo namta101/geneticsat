@@ -17,6 +17,7 @@ public class Mutator {
             break;
             case "Greedy": greedyMutation(genes);
             break;
+            default: System.out.println("Error choosing mutation method");
         }
     }
 
