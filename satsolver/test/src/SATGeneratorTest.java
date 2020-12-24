@@ -40,9 +40,13 @@ public class SATGeneratorTest {
 
             Random rand = new Random();
             for(int i = 0; i<numberOfClauses; i++){
-                int numberOfVariablesInClause = rand.nextInt(3) + 1;
+                int numberOfVariablesInClause = rand.nextInt(3) + 1 ;
                 for(int j= 0; j<numberOfVariablesInClause; j++) {
-                    fileWriter.print(rand.nextInt(numberOfVariables) + 1  + " ");
+                    if(rand.nextBoolean()) {
+                        fileWriter.print((rand.nextInt(numberOfVariables) + 1) + " ");
+                    } else{
+                        fileWriter.print("-" + (rand.nextInt(numberOfVariables) + 1) + " ");
+                    }
                 }
                 fileWriter.print("\n");
             }

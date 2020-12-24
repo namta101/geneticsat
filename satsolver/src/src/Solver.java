@@ -12,8 +12,8 @@ public class Solver {
     private int[] satisfyingSolution;
     private long startTime;
     private long restartTimeTracker;
-    private final long upperTimeLimit = 50000;
-    private final long timeBeforeEachRestart = 5000;
+    private final long upperTimeLimit = 5000;
+    private final long timeBeforeEachRestart = 100000;
     private int generationNumber = 1;
 
     public Solver(Formula formula, int numberOfVariables) {

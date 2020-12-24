@@ -2,6 +2,9 @@ package src;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -17,6 +20,10 @@ public class Main {
     public static void main(String[] args) {
         startTimer();
         formula = new Formula();
+        if(args.length > 1) {
+            createEmptyFile(args[0]);
+            writeSATProblemToFile(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        }
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
         satSolver.solve();
@@ -57,6 +64,44 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    public static void createEmptyFile(String fileName) {
+        File myObj = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
+        try {
+            myObj.createNewFile();
+        } catch (IOException exception) {
+            System.out.println("Fail to create file");
+            exception.printStackTrace();
+        }
+    }
+
+    public static void writeSATProblemToFile(String fileName, int numberOfVariables, int numberOfClauses) {
+        try{
+            PrintStream fileWriter = new PrintStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
+            fileWriter.println("p cnf " + numberOfVariables + " " + numberOfClauses);
+
+            Random rand = new Random();
+            for(int i = 0; i<numberOfClauses; i++){
+                int numberOfVariablesInClause = rand.nextInt(3) + 1 ;
+                for(int j= 0; j<numberOfVariablesInClause; j++) {
+                    if(rand.nextBoolean()) {
+                        fileWriter.print((rand.nextInt(numberOfVariables) + 1) + " ");
+                    } else{
+                        fileWriter.print("-" + (rand.nextInt(numberOfVariables) + 1) + " ");
+                    }
+                }
+                fileWriter.print("\n");
+            }
+            fileWriter.close();
+        } catch (IOException exception) {
+            System.out.println("Fail to write to file");
+            exception.printStackTrace();
+        }
+    }
+
+
+
+
 
     public static void startTimer() {
         startTime = System.currentTimeMillis();
