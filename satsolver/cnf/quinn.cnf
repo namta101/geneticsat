@@ -19,3 +19,8 @@ p cnf 16 18
  13   14  0
  14  -15  0
  15   16  0
+
+
+c Solution found: [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1] Time taken to solve: 135ms
+c Solution found: [1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1] Time taken to solve: 100ms
+c Solution found: [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1] Time taken to solve: 137ms

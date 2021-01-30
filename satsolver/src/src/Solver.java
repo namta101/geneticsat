@@ -23,6 +23,7 @@ public class Solver {
         solutionFound = false;
     }
 
+    // If solution found return else return empty int[]
     public int[] solve() {
         startTimer();
         resetRestartTracker();
@@ -42,7 +43,11 @@ public class Solver {
                 break;
             }
         }
-        return population.getCurrentMostSatisfyingSolution();
+        if(solutionFound){
+            return satisfyingSolution;
+        } else {
+            return new int[0];
+        }
     }
 
     public void processAlgorithm(){

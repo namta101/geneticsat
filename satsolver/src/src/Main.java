@@ -1,9 +1,7 @@
 package src;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -26,8 +24,9 @@ public class Main {
         }
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
-        satSolver.solve();
+        int[] solution = satSolver.solve();
         stopTimer();
+        writeSATStatisticsToFile(args[0], elapsedTime, solution);
         System.out.println("Completed in: " + elapsedTime + "ms");
     }
 
@@ -79,10 +78,9 @@ public class Main {
         try{
             PrintStream fileWriter = new PrintStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
             fileWriter.println("p cnf " + numberOfVariables + " " + numberOfClauses);
-
             Random rand = new Random();
             for(int i = 0; i<numberOfClauses; i++){
-                int numberOfVariablesInClause = rand.nextInt(3) + 1 ;
+                int numberOfVariablesInClause = 3;
                 for(int j= 0; j<numberOfVariablesInClause; j++) {
                     if(rand.nextBoolean()) {
                         fileWriter.print((rand.nextInt(numberOfVariables) + 1) + " ");
@@ -94,14 +92,25 @@ public class Main {
             }
             fileWriter.close();
         } catch (IOException exception) {
-            System.out.println("Fail to write to file");
+            System.out.println("Fail to write new SAT problem to file");
             exception.printStackTrace();
         }
     }
-
-
-
-
+    // if size = 0 print unsatisfiable, else print time solved and solution.
+    public static void writeSATStatisticsToFile(String fileName, long timeToSolve, int[] solution){
+        try {
+            PrintStream fileWriter = new PrintStream(new FileOutputStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName, true));
+            if (solution.length<1) {
+                fileWriter.println("c " + "No solution found");
+            } else {
+                fileWriter.println("c " + "Solution found: " + Arrays.toString(solution) + " " + "Time taken to solve: " + timeToSolve + "ms");
+            }
+            fileWriter.close();
+        }catch(Exception exception) {
+            System.out.println("Fail to write SAT statistics to file");
+            exception.printStackTrace();
+        }
+    }
 
     public static void startTimer() {
         startTime = System.currentTimeMillis();
