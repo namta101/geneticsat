@@ -12,8 +12,11 @@ public class Solver {
     private int[] satisfyingSolution;
     private long startTime;
     private long restartTimeTracker;
-    private final long upperTimeLimit = 5000;
+    private final long upperTimeLimit = 50000;
     private final long timeBeforeEachRestart = 100000;
+    private final int generationsBeforeRestart = 1000000;
+    private int unimprovedGenerationsBeforeRestart = 3000;
+    private int unimprovedGenerationsCount = 0;
     private int generationNumber = 1;
 
     public Solver(Formula formula, int numberOfVariables) {
@@ -86,7 +89,15 @@ public class Solver {
     }
 
     private boolean shouldRestartAlgorithm() {
-        return (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
+        if (population.getGenerationImproved()){
+            unimprovedGenerationsCount = 0;
+        } else {
+            unimprovedGenerationsCount++;
+
+        }
+      //  return (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
+        System.out.println("unimproved count" + unimprovedGenerationsCount);
+        return unimprovedGenerationsCount >= unimprovedGenerationsBeforeRestart;
     }
 
     private void resetRestartTracker() {this.restartTimeTracker = System.currentTimeMillis();}

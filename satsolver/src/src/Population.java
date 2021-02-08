@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Population {
-    public static final int POPULATION_SIZE = 502;
+    public static final int POPULATION_SIZE = 300;
     public static final double ELITISM_RATE = 0.8;
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
     private int[] satisfyingSolution;
+    private double currentGenerationHighestFitnessScore = 0;
+    private boolean generationImproved = false;
     private double currentGenerationTotalFitnessScore;
     private Mutator mutator;
     private ParentSelector parentSelector;
@@ -50,6 +52,11 @@ public class Population {
     public void nextPopulation() {
         setCurrentGenerationTotalFitnessScore();
         sortPopulationByFitnessValue(this.chromosomes);
+
+        double previousGenerationHighestFitnessScore = currentGenerationHighestFitnessScore;
+        currentGenerationHighestFitnessScore = chromosomes.get(0).getFitnessScore();
+        generationImproved = currentGenerationHighestFitnessScore > previousGenerationHighestFitnessScore;
+
         chromosomes = createNewPopulation();
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -142,6 +149,10 @@ public class Population {
 
    public int[] getSatisfyingSolution() {
         return this.satisfyingSolution;
+   }
+
+   public boolean getGenerationImproved(){
+        return generationImproved;
    }
 
 }

@@ -101,7 +101,7 @@ public class Main {
         try {
             PrintStream fileWriter = new PrintStream(new FileOutputStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName, true));
             if (solution.length<1) {
-                fileWriter.println("c " + "No solution found");
+                fileWriter.println("c " + "No solution found" + "Time spent trying to find solution: " + timeToSolve + "ms");
             } else {
                 fileWriter.println("c " + "Solution found: " + Arrays.toString(solution) + " " + "Time taken to solve: " + timeToSolve + "ms");
             }
