@@ -2,8 +2,6 @@ package src;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-
 import java.util.Arrays;
 
 public class PopulationTest {
@@ -18,7 +16,6 @@ public class PopulationTest {
     public void initialisePopulation_createsCreatesPopulationSizeNumberOfChromosomes() {
         population.initialisePopulation();
         Assertions.assertEquals(Population.POPULATION_SIZE, population.getChromosomes().size());
-
     }
 
     // Correct solution is 1,1,1
@@ -31,16 +28,13 @@ public class PopulationTest {
             if (!Arrays.equals(correctSolution, population.getSatisfyingSolution())) {
                 Assertions.fail();
             }
-
         }
     }
 
     @Test
     public void sortByFitnessValue_SortsChromosomesInOrderOfFitnessValueDescending() {
         population.initialisePopulation();
-
         population.sortPopulationByFitnessValue(population.getChromosomes());
-
         for (int i = 0; i < population.getChromosomes().size()-1; i++) {
             if (population.getChromosomes().get(i).getFitnessScore() >= population.getChromosomes().get(i+1).getFitnessScore()) {
                 // continue
@@ -49,8 +43,10 @@ public class PopulationTest {
                 Assertions.fail();
             }
         }
-
     }
+
+
+
 
 }
 

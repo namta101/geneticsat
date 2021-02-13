@@ -3,16 +3,18 @@ package src;
 import java.util.ArrayList;
 import java.util.Random;
 
+// This class is responsible for the stage of Parent Selection in the genetic algorithm
 public class ParentSelector {
     private double[] rouletteWheel;
     private double[] rankBoard;
-    private int numberOfChromosomesInEachRank = 10;
-    private GACombination.ParentSelection parentSelectionMethod;
+    private final int numberOfChromosomesInEachRank = 10;
+    private final GACombination.ParentSelection parentSelectionMethod;
 
     public ParentSelector() {
         parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
     }
 
+    // Sets up the Roulette Wheel or Rank Board
     public void setUpForGeneration(ArrayList<Chromosome> chromosomes) {
         switch (parentSelectionMethod.name()) {
             case "RouletteWheel":
@@ -22,10 +24,12 @@ public class ParentSelector {
                 setRankBoard(chromosomes);
                 break;
             default:
-                System.out.println("Error choosing parent selection method");
+                System.out.println("Error choosing parent selection method, using default Rank Board implementation");
+                setRankBoard(chromosomes);
         }
     }
 
+    // Chooses the parent by selecting from the created roulette wheel or rank board
     public Chromosome chooseParent(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
         switch (parentSelectionMethod) {
             case RouletteWheel:
@@ -48,17 +52,15 @@ public class ParentSelector {
         Random rand = new Random();
         double positionOnRouletteWheel = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble()); // values from 1 to total
         double currentTotal = 0;
-        for (int i = 0; i < rouletteWheel.length; i++) {
-            currentTotal = currentTotal + rouletteWheel[i];
+        for (int i = 0; i < rouletteWheel.length; i++) { // Slowly goes through roulette wheel until we get to
+            currentTotal = currentTotal + rouletteWheel[i]; // the position randomly chosen
             if (currentTotal >= positionOnRouletteWheel) {
                 indexOfChromosomeToChoose = i;
                 break;
             }
 
         }
-
         return chromosomes.get(indexOfChromosomeToChoose);
-
     }
 
     public double[] createRouletteWheel(ArrayList<Chromosome> chromosomes) {
@@ -69,7 +71,6 @@ public class ParentSelector {
             rouletteTotal = rouletteTotal + chromosomeFitness;
             newRouletteWheel[i] = rouletteTotal;
         }
-
         return newRouletteWheel;
     }
 
@@ -96,7 +97,6 @@ public class ParentSelector {
                 break;
             }
         }
-
         return indexOfRankToChoose;
     }
 
@@ -131,7 +131,14 @@ public class ParentSelector {
         return rankBoard;
     }
 
+    // Used for unit tests
     public int getNumberOfChromosomesInEachRank() {
         return this.numberOfChromosomesInEachRank;
     }
+
+    // Used for unit tests
+    public double[] getRouletteWheel() {
+        return rouletteWheel;
+    }
+
 }

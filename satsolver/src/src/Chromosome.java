@@ -1,17 +1,16 @@
 package src;
 
-import java.util.ArrayList;
-import java.util.Random;
-
+// This class represents one possible solution to the SAT problem
+// The answer lies within the genes
 public class Chromosome {
 
-    private int numberOfGenes;
+    private final int numberOfGenes;
     private double fitnessScore;
     private int[] genes;
-    private Formula formula;
-    private Mutator mutator;
+    private final Formula formula;
+    private final Mutator mutator;
 
-    private double MUTATION_RATE = 0.2;
+    private final double MUTATION_RATE = 0.2;
 
     public Chromosome(int numberOfGenes, Formula formula, Mutator mutator) {
         this.formula = formula;
@@ -22,6 +21,7 @@ public class Chromosome {
 
     }
 
+    // Creates the solution for the chromosome
     private void initialiseGenes() {
         genes = new int[numberOfGenes];
         for (int i = 0; i < numberOfGenes; i++) {
@@ -33,10 +33,9 @@ public class Chromosome {
         }
     }
 
-
-
+    // Sets fitness score to the number of clauses matched
     public void assignFitnessScore() {
-        this.fitnessScore = formula.getNumberOfClausesMatched(genes);
+        this.fitnessScore = formula.getClausesMatched(genes);
     }
 
     public void mutate() {
@@ -45,18 +44,13 @@ public class Chromosome {
         }
     }
 
-    private boolean shouldMutate() {
+    public boolean shouldMutate() {
         double randomNumber = Math.random();
         return (randomNumber <= MUTATION_RATE);
-
     }
 
     public void intakeParentsGenes(int[] parentsGenes) {
         this.genes = parentsGenes;
-    }
-
-    private void incrementFitnessScore() {
-        this.fitnessScore++;
     }
 
     public void clearFitnessScore() {

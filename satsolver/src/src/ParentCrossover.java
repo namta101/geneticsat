@@ -2,11 +2,12 @@ package src;
 
 import java.util.Random;
 
+// This class is responsible for the stage of Parent Crossover in the genetic algorithm
 public class ParentCrossover {
-    private Formula formula;
-    private int numberOfVariables;
-    private GACombination.Crossover crossoverMethod;
-    private Mutator mutator;
+    private final Formula formula;
+    private final int numberOfVariables;
+    private final GACombination.Crossover crossoverMethod;
+    private final Mutator mutator;
 
     public ParentCrossover(Formula formula, int numberOfVariables, Mutator mutator) {
         this.formula = formula;
@@ -22,12 +23,12 @@ public class ParentCrossover {
             case "TwoPoint":
                 return twoPointCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
             default:
-                System.out.println("Error in choosing crossover method");
-
+                System.out.println("Error in choosing crossover method, using default Uniform implementation");
+                return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
         }
-        return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
     }
 
+    // Alternates choosing bits from parent one and parent two genes
     public Chromosome uniformCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
         Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];
@@ -44,6 +45,8 @@ public class ParentCrossover {
         return offspring;
     }
 
+    // Chooses two pivot points, and chooses parent one's genes for before the first point and after the second point
+    // And then chooses parent two's genes for in between these two points
     public Chromosome twoPointCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
         Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];

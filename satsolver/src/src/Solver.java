@@ -13,11 +13,13 @@ public class Solver {
     private long startTime;
     private long restartTimeTracker;
     private final long upperTimeLimit = 50000;
-    private final long timeBeforeEachRestart = 100000;
+    private long timeBeforeEachRestart = 20000;
     private final int generationsBeforeRestart = 1000000;
     private int unimprovedGenerationsBeforeRestart = 3000;
     private int unimprovedGenerationsCount = 0;
     private int generationNumber = 1;
+    private int numberOfRestarts = 0;
+    private int totalGenerationsPassed = 0;
 
     public Solver(Formula formula, int numberOfVariables) {
         this.formula = formula;
@@ -29,7 +31,7 @@ public class Solver {
     // If solution found return else return empty int[]
     public int[] solve() {
         startTimer();
-        resetRestartTracker();
+        resetRestartTimer();
         population.initialisePopulation();
         solutionFound = population.isSatisfied();
         if (solutionFound) {
@@ -40,6 +42,7 @@ public class Solver {
            processAlgorithm();
            if(shouldRestartAlgorithm()) {
                restartAlgorithm();
+               numberOfRestarts++;
            }
             if (upperTimeLimitReached()) {
                 printCurrentMostSatisfyingSolution();
@@ -55,6 +58,7 @@ public class Solver {
 
     public void processAlgorithm(){
         generationNumber++;
+        totalGenerationsPassed++;
         System.out.println("This is Generation number: " + generationNumber);
         population.nextPopulation();
         solutionFound = population.isSatisfied();
@@ -69,7 +73,8 @@ public class Solver {
         population.clearPopulation();
         population.initialisePopulation();
         generationNumber = 0;
-        resetRestartTracker();
+        unimprovedGenerationsCount = 0;
+        resetRestartTimer();
     }
 
     private void printSatisfyingSolution() {
@@ -84,27 +89,51 @@ public class Solver {
                 + "Fitness score of: " + currentFitnessSolutionFitnessScore);
     }
 
-    private void startTimer() {
+    public void startTimer() {
         this.startTime = System.currentTimeMillis();
     }
 
-    private boolean shouldRestartAlgorithm() {
+    public boolean shouldRestartAlgorithm() {
         if (population.getGenerationImproved()){
             unimprovedGenerationsCount = 0;
         } else {
             unimprovedGenerationsCount++;
 
         }
-      //  return (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
-        System.out.println("unimproved count" + unimprovedGenerationsCount);
-        return unimprovedGenerationsCount >= unimprovedGenerationsBeforeRestart;
+        boolean timeLimitPassed = (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
+        boolean unimprovedGenerationsPassed = unimprovedGenerationsCount >= unimprovedGenerationsBeforeRestart;
+        return timeLimitPassed || unimprovedGenerationsPassed;
     }
 
-    private void resetRestartTracker() {this.restartTimeTracker = System.currentTimeMillis();}
+    public void resetRestartTimer() {this.restartTimeTracker = System.currentTimeMillis();}
 
-    private boolean upperTimeLimitReached() {
+    public long getRestartTimeTracker() {
+        return restartTimeTracker;
+    }
+
+    public boolean upperTimeLimitReached() {
         System.out.println("Time: " + (System.currentTimeMillis() - startTime));
         return (System.currentTimeMillis() - startTime) > upperTimeLimit;
     }
 
+    public int getGenerationNumber() {
+        return generationNumber;
+    }
+
+    public long getStartTime() { return startTime; }
+    public int getNumberOfRestarts() { return numberOfRestarts; }
+    public int getTotalGenerationsPassed() {return totalGenerationsPassed; }
+    public int getUnimprovedGenerationsBeforeRestart() {return unimprovedGenerationsBeforeRestart;}
+    public long getTimeBeforeEachRestart() {return timeBeforeEachRestart;}
+
+    public void setRestartTimerToMax() {
+        timeBeforeEachRestart = 999999999;
+    }
+
+    public void setUnimprovedGenerationsBeforeRestartToMax(){
+        unimprovedGenerationsBeforeRestart = 999999999;
+    }
+
 }
+
+

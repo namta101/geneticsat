@@ -2,9 +2,10 @@ package src;
 
 import java.util.Random;
 
+// This class is responsible for the stage of Mutation in the genetic algorithm
 public class Mutator {
-    private GACombination.Mutation mutationMethod;
-    private Formula formula;
+    private final GACombination.Mutation mutationMethod;
+    private final Formula formula;
 
     public Mutator(Formula formula) {
         this.formula = formula;
@@ -17,10 +18,13 @@ public class Mutator {
             break;
             case "Greedy": greedyMutation(genes);
             break;
-            default: System.out.println("Error choosing mutation method");
+            default: System.out.println("Error choosing mutation method, using default Random implementation");
+                     randomMutation(genes);
+
         }
     }
 
+    // Mutates the genes by randomly flipping a gene
     public void randomMutation(int[] genes) {
         Random rand = new Random();
         int upperBound = genes.length - 1;
@@ -32,6 +36,7 @@ public class Mutator {
         }
     }
 
+    // Mutates a gene by going alone the line of genes and flipping a gene only if it improves the fitness score
     public void greedyMutation(int[] genes) {
         for (int i = 0; i<genes.length; i++) {
             double preMutateFitnessScore = formula.getClausesMatched(genes);
@@ -53,7 +58,5 @@ public class Mutator {
 
         }
     }
-
-
 
 }

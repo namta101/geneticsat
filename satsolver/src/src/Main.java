@@ -18,13 +18,17 @@ public class Main {
     public static void main(String[] args) {
         startTimer();
         formula = new Formula();
+
+        // Creating our own randomly generated SAT problem
         if(args.length > 1) {
             createEmptyFile(args[0]);
             writeSATProblemToFile(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
         }
+        // Convert the SAT problem file to a form our SAT solver can solve
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
         int[] solution = satSolver.solve();
+
         stopTimer();
         writeSATStatisticsToFile(args[0], elapsedTime, solution);
         System.out.println("Completed in: " + elapsedTime + "ms");
@@ -32,7 +36,7 @@ public class Main {
 
     // Reads the inputted DIMACS file, and populates the class variables with the
     // information from the file
-    private static void readDIMACSFile(String dimacsFile) {
+    public static void readDIMACSFile(String dimacsFile) {
         try {
             File file = new File("satsolver/cnf/" + dimacsFile);
             Scanner scanner = new Scanner(file);
@@ -40,7 +44,7 @@ public class Main {
                 String line = scanner.nextLine().trim();
                 if (line.length() >= 1) {
                     if (line.charAt(0) == ('c')) {
-                        System.out.println(line.substring(1, line.length())); // Print out comments of the file
+                        System.out.println(line.substring(1)); // Print out comments of the file
                     } else if (line.charAt(0) == ('p')) {
                         String[] pcnfline = line.split("\\s+"); // Assigns the number of variables and clauses from file
                         numberOfVariables = Integer.parseInt(pcnfline[2]);
@@ -52,18 +56,16 @@ public class Main {
                         int[] clauseLineVariablesInt = Utility.convertStringArrayToIntArray(clauseLineVariables);
                         formula.addClause(new Clause(clauseLineVariablesInt));
                     }
-
                 }
-
             }
             scanner.close();
-
         } catch (FileNotFoundException e) {
             System.out.println("File is not found, please check file exists or arguments have been typed in correctly");
             e.printStackTrace();
         }
     }
 
+    // Create an empty file to write our newly created SAT problem to
     public static void createEmptyFile(String fileName) {
         File myObj = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
         try {
@@ -74,6 +76,7 @@ public class Main {
         }
     }
 
+    // Create a 3 SAT problem and write it to the newly created file
     public static void writeSATProblemToFile(String fileName, int numberOfVariables, int numberOfClauses) {
         try{
             PrintStream fileWriter = new PrintStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
@@ -96,17 +99,19 @@ public class Main {
             exception.printStackTrace();
         }
     }
-    // if size = 0 print unsatisfiable, else print time solved and solution.
+
+    // Append the statistics of solving the SAT problem to the file
     public static void writeSATStatisticsToFile(String fileName, long timeToSolve, int[] solution){
         try {
             PrintStream fileWriter = new PrintStream(new FileOutputStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName, true));
-            if (solution.length<1) {
+            if (solution.length<1) { // Solution of length 0 indicates no solution was found
                 fileWriter.println("c " + "No solution found" + "Time spent trying to find solution: " + timeToSolve + "ms");
             } else {
                 fileWriter.println("c " + "Solution found: " + Arrays.toString(solution) + " " + "Time taken to solve: " + timeToSolve + "ms");
             }
             fileWriter.close();
-        }catch(Exception exception) {
+        }
+        catch(Exception exception) {
             System.out.println("Fail to write SAT statistics to file");
             exception.printStackTrace();
         }

@@ -27,6 +27,17 @@ public class ParentCrossoverTest {
 
     }
 
+    @Test
+    public void uniformCrossover_ReturnsChromosomeWithGenesOf2ParentsUniformCrossed1(){
+        int[] parentOneGenes = new int[]{1};
+        int[] parentTwoGenes = new int[]{0};
+        Chromosome offspring = parentCrossover.uniformCrossover(parentOneGenes, parentTwoGenes, parentOneGenes.length);
+        int[] predictedOffSpringGenes = new int[]{1};
+
+        Assertions.assertTrue(Arrays.equals(predictedOffSpringGenes, offspring.getGenes()));
+
+    }
+
     // Due to randomness of method, it is hard to predict genes that will come out
     @Test
     public void twoPointCrossover_ReturnsChromosome() {

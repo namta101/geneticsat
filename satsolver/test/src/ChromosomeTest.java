@@ -1,14 +1,9 @@
 package src;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 public class ChromosomeTest {
     Chromosome chromosome;
     public ChromosomeTest() {
@@ -26,6 +21,13 @@ public class ChromosomeTest {
     public void initialiseGenes_ValidFormula_genesLengthEqualsClausesInFormula() {
         Assertions.assertEquals(3,chromosome.getGenes().length);
     }
+
+    @Test
+    public void getGenes_normalGenes_returnsCorrectGenes(){
+        int[] genes = chromosome.getGenes();
+        Assertions.assertArrayEquals(genes, new int[]{1,1,1});
+    }
+
 
 //    @Test
 //    public void getClausesMatched_validClauseChromosome_returnsCorrectNumberOfClausesMatched() {

@@ -1,6 +1,6 @@
 package src;
 
-public final class Utility {
+public final class      Utility {
     private Utility() {
         throw new UnsupportedOperationException();
     }

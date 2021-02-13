@@ -1,11 +1,12 @@
 package src;
 
 import java.util.ArrayList;
-import java.util.Random;
 
+// This class represents the set of solutions (chromosomes)
+// It is responsible for also deciding the population size and elitism rate
 public class Population {
     public static final int POPULATION_SIZE = 300;
-    public static final double ELITISM_RATE = 0.8;
+    public static final double ELITISM_RATE = 0.8; // Proportion of chromosomes that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
@@ -27,6 +28,8 @@ public class Population {
         parentCrossover = new ParentCrossover(formula, numberOfVariables, mutator);
     }
 
+    // When we add a new chromosome, the chromosome automatically creates its own genes and calculates
+    // its own fitness score
     public void initialisePopulation() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
@@ -38,10 +41,10 @@ public class Population {
     }
 
     // Checks whether there is a satisfying solution, if there is, assigns it to the
-    // field variable satisfying solution
+    // field variable satisfyingSolution
     public boolean isSatisfied() {
         for (Chromosome chromosome : chromosomes) {
-            if (chromosome.getFitnessScore() == formula.getSize()) {
+            if (chromosome.getFitnessScore() == formula.getSize()) { // Checks it is equal to the number of clauses
                 satisfyingSolution = chromosome.getGenes();
                 return true;
             }
@@ -49,14 +52,17 @@ public class Population {
         return false;
     }
 
+    // Creates a new population, undergoing the methods of genetic algorithms
     public void nextPopulation() {
         setCurrentGenerationTotalFitnessScore();
         sortPopulationByFitnessValue(this.chromosomes);
 
+        // Used by the solver to check if the solutions are improving
         double previousGenerationHighestFitnessScore = currentGenerationHighestFitnessScore;
         currentGenerationHighestFitnessScore = chromosomes.get(0).getFitnessScore();
         generationImproved = currentGenerationHighestFitnessScore > previousGenerationHighestFitnessScore;
 
+        // Undergoes parent selection and crossover
         chromosomes = createNewPopulation();
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -68,6 +74,8 @@ public class Population {
 
     }
 
+    // Creates new population by copying over portion of old population and creating new chromosomes
+    // by undergoing parent selection and parent crossover
     private ArrayList<Chromosome> createNewPopulation() {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();

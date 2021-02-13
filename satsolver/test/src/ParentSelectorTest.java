@@ -3,7 +3,6 @@ package src;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 
 public class ParentSelectorTest {
     Population population;
@@ -17,13 +16,24 @@ public class ParentSelectorTest {
         parentSelector = new ParentSelector();
     }
 
-    // We cannot test this method because it could return any chromosome. But we can use it to easily debug the method.
+    @Test
+    public void setUpForGeneration_setsUpRouletteWheel(){
+        parentSelector.setUpForGeneration(population.getChromosomes());
+        double[] rouletteWheel = parentSelector.getRouletteWheel();
+        Assertions.assertNotNull(rouletteWheel);
+        Assertions.assertEquals(300, rouletteWheel.length);
+    }
+
+    // We cannot test these 2 method because it could return any chromosome. But we can use it to easily debug the method.
     @Test
     public void rouletteWheelSelection_returnsCorrectChromosome() {
         parentSelector.setRouletteWheel(population.getChromosomes());
 
-        Chromosome chromosomeChosen = parentSelector.rouletteWheelSelection(population.getChromosomes(), population.getCurrentGenerationTotalFitnessScore());
-        Assertions.assertEquals(3, chromosomeChosen.getGenes().length); // T
+        Chromosome chromosomeChosen = parentSelector.chooseParent(population.getChromosomes(), population.getCurrentGenerationTotalFitnessScore());
+        Chromosome chromosomeChosen1 = parentSelector.rouletteWheelSelection(population.getChromosomes(), population.getCurrentGenerationTotalFitnessScore());
+        Assertions.assertEquals(3, chromosomeChosen.getGenes().length);
+        Assertions.assertEquals(3, chromosomeChosen1.getGenes().length);
+
     }
 
     @Test
@@ -49,8 +59,9 @@ public class ParentSelectorTest {
                 Assertions.fail();
             }
         }
-
     }
+
+
 
     @Test
     // Hard to test as the rank chosen will change each time... Unless we run it many times and hope the probability of it choosing a rank
