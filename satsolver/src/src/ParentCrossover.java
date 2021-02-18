@@ -51,23 +51,47 @@ public class ParentCrossover {
         Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];
 
+
         Random rand = new Random();
         int pointOne = rand.nextInt(lengthOfGenes-1);
         int pointTwo = rand.nextInt(lengthOfGenes-1);
 
-        for(int i = 0; i<pointOne; i++) {
-            offspringGenes[i] = parentOneGenes[i];
-        }
-        for(int i = pointOne; i<pointTwo; i++) {
-            offspringGenes[i] = parentTwoGenes[i];
-        }
-        for(int i = pointTwo; i<lengthOfGenes; i++) {
-            offspringGenes[i] = parentOneGenes[i];
-        }
+        if(shouldCrossover(pointOne, pointTwo, lengthOfGenes)){
+            for (int i = 0; i < pointOne; i++) {
+                offspringGenes[i] = parentOneGenes[i];
+            }
+            for (int i = pointOne; i < pointTwo; i++) {
+                offspringGenes[i] = parentTwoGenes[i];
+            }
+            for (int i = pointTwo; i < lengthOfGenes; i++) {
+                offspringGenes[i] = parentOneGenes[i];
+            }
 
-        offspring.intakeParentsGenes(offspringGenes);
+            offspring.intakeParentsGenes(offspringGenes);
+        } else {
+            offspring.intakeParentsGenes(parentOneGenes);
+        }
         return offspring;
 
+    }
+
+    // Checks whether crossover length chosen is between 20% and 80% of the length of genes
+    public boolean shouldCrossover(int pointOne, int pointTwo, int lengthOfGenes) {
+        if (lengthOfGenes < 10) { // We want to allow crossover to happen if we are dealing with small chromosomes
+            return true;
+        }
+
+        int lengthOfCrossover = Math.abs(pointOne - pointTwo);
+        int bottomBoundary = (int) Math.round(lengthOfGenes * 0.2);
+        int topBoundary =  (int) Math.round(lengthOfGenes * 0.8);
+        if (lengthOfCrossover < bottomBoundary) {
+            return false;
+        }
+        if (lengthOfCrossover > topBoundary) {
+            return false;
+        }
+
+        return true;
     }
 
 
