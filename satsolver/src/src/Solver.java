@@ -1,8 +1,5 @@
 package src;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public class Solver {
     private Population population;
@@ -12,11 +9,11 @@ public class Solver {
     private int[] satisfyingSolution;
     private long startTime;
     private long restartTimeTracker;
-    private final long upperTimeLimit = 50000;
-    private long timeBeforeEachRestart = 20000;
+    private final long upperTimeLimit = 300000;
+    private long timeBeforeEachRestart = 400000;
     private final int generationsBeforeRestart = 1000000;
-    private int unimprovedGenerationsBeforeRestart = 3000;
-    private int unimprovedGenerationsCount = 0;
+    private int unimprovedGenerationsBeforeRestart = 9999999;
+    private int unimprovedGenerationsCount = 1;
     private int generationNumber = 1;
     private int numberOfRestarts = 0;
     private int totalGenerationsPassed = 0;
@@ -120,17 +117,32 @@ public class Solver {
         return generationNumber;
     }
 
-    public long getStartTime() { return startTime; }
-    public int getNumberOfRestarts() { return numberOfRestarts; }
-    public int getTotalGenerationsPassed() {return totalGenerationsPassed; }
-    public int getUnimprovedGenerationsBeforeRestart() {return unimprovedGenerationsBeforeRestart;}
-    public long getTimeBeforeEachRestart() {return timeBeforeEachRestart;}
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public int getNumberOfRestarts() {
+        return numberOfRestarts;
+    }
+
+    public int getTotalGenerationsPassed() {
+        return totalGenerationsPassed;
+    }
+
+    public int getUnimprovedGenerationsBeforeRestart() {
+        return unimprovedGenerationsBeforeRestart;
+    }
+
+    public long getTimeBeforeEachRestart() {
+        return timeBeforeEachRestart;
+    }
 
     public void setRestartTimerToMax() {
         timeBeforeEachRestart = 999999999;
     }
 
     public void setUnimprovedGenerationsBeforeRestartToMax(){
+
         unimprovedGenerationsBeforeRestart = 999999999;
     }
 

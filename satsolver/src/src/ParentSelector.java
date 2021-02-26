@@ -7,7 +7,7 @@ import java.util.Random;
 public class ParentSelector {
     private double[] rouletteWheel;
     private double[] rankBoard;
-    private final int numberOfChromosomesInEachRank = 10;
+    private final int numberOfChromosomesInEachRank = 2;
     private final GACombination.ParentSelection parentSelectionMethod;
 
     public ParentSelector() {
@@ -82,6 +82,14 @@ public class ParentSelector {
         int rankToChoose = chooseRank(currentGenerationTotalFitnessScore);
         int positionInRank = new Random().nextInt(numberOfChromosomesInEachRank); // selects random chromosome in rank
         int indexOfChromosomeToChoose = (rankToChoose * numberOfChromosomesInEachRank) + positionInRank;
+
+        // If population size is not a multiple of number of chromosomes in each rank, there is a chance of picking a rank
+        // off the edge of the population
+        if(indexOfChromosomeToChoose > chromosomes.size()-1){
+            positionInRank = new Random().nextInt(chromosomes.size()%numberOfChromosomesInEachRank);
+            indexOfChromosomeToChoose = (rankToChoose*numberOfChromosomesInEachRank) + positionInRank;
+        }
+
         return chromosomes.get(indexOfChromosomeToChoose);
     }
 

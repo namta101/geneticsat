@@ -21,7 +21,7 @@ public class ParentSelectorTest {
         parentSelector.setUpForGeneration(population.getChromosomes());
         double[] rouletteWheel = parentSelector.getRouletteWheel();
         Assertions.assertNotNull(rouletteWheel);
-        Assertions.assertEquals(300, rouletteWheel.length);
+        Assertions.assertEquals(15, rouletteWheel.length);
     }
 
     // We cannot test these 2 method because it could return any chromosome. But we can use it to easily debug the method.

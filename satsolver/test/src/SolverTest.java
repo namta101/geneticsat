@@ -27,7 +27,7 @@ public class SolverTest {
     @Test
     public void upperTimeLimitReached_timeLimitReachedReached_returnsTrue() throws InterruptedException {
         solver.startTimer();
-        Thread.sleep(60000);
+        Thread.sleep(400000);
         boolean result = solver.upperTimeLimitReached();
         Assertions.assertTrue(result);
     }

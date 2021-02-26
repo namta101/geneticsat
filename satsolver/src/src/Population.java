@@ -5,8 +5,8 @@ import java.util.ArrayList;
 // This class represents the set of solutions (chromosomes)
 // It is responsible for also deciding the population size and elitism rate
 public class Population {
-    public static final int POPULATION_SIZE = 300;
-    public static final double ELITISM_RATE = 0.8; // Proportion of chromosomes that stay on to next generation
+    public static final int POPULATION_SIZE = 15;
+    public static final double ELITISM_RATE = 0.9; // Proportion of chromosomes from most fit that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
