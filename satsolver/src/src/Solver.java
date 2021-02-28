@@ -12,7 +12,7 @@ public class Solver {
     private final long upperTimeLimit = 300000;
     private long timeBeforeEachRestart = 400000;
     private final int generationsBeforeRestart = 1000000;
-    private int unimprovedGenerationsBeforeRestart = 9999999;
+    private int unimprovedGenerationsBeforeRestart = 300;
     private int unimprovedGenerationsCount = 1;
     private int generationNumber = 1;
     private int numberOfRestarts = 0;

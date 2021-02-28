@@ -17,6 +17,7 @@ public class ParentCrossover {
     }
 
     public Chromosome crossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
+        try{
         switch (crossoverMethod.name()) {
             case "Uniform":
                 return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
@@ -25,6 +26,13 @@ public class ParentCrossover {
             default:
                 System.out.println("Error in choosing crossover method, using default Uniform implementation");
                 return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+        }
+        }
+        catch(Exception e) {
+            System.out.println("Error crossing over parents, returning first parent" + "Error: " + e);
+            Chromosome defaultChromosome = new Chromosome(lengthOfGenes, formula, mutator);
+            defaultChromosome.intakeParentsGenes(parentOneGenes);
+            return defaultChromosome;
         }
     }
 

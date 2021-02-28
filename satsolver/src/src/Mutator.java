@@ -26,36 +26,47 @@ public class Mutator {
 
     // Mutates the genes by randomly flipping a gene
     public void randomMutation(int[] genes) {
-        Random rand = new Random();
-        int upperBound = genes.length - 1;
-        int positionToMutate = rand.nextInt(upperBound);
-        if (genes[positionToMutate] == 0) {
-            genes[positionToMutate] = 1;
-        } else {
-            genes[positionToMutate] = 0;
+        try {
+            Random rand = new Random();
+            int upperBound = genes.length - 1;
+            int positionToMutate = rand.nextInt(upperBound);
+            if (genes[positionToMutate] == 0) {
+                genes[positionToMutate] = 1;
+            } else {
+                genes[positionToMutate] = 0;
+            }
+        } catch (Exception e) {
+            System.out.println("Failure to random mutate");
+            System.out.println("Error: " + e);
         }
+
     }
 
     // Mutates a gene by going alone the line of genes and flipping a gene only if it improves the fitness score
     public void greedyMutation(int[] genes) {
-        for (int i = 0; i<genes.length; i++) {
-            double preMutateFitnessScore = formula.getClausesMatched(genes);
-            int[] postMutatedGenes;
-            postMutatedGenes = genes.clone();
-            if (postMutatedGenes[i] == 0) {
-                postMutatedGenes[i] = 1;
-            } else {
-                postMutatedGenes[i] = 0;
-            }
-            double postMutateFitnessScore = formula.getClausesMatched(postMutatedGenes);
-            if(postMutateFitnessScore>preMutateFitnessScore) {
-                if (genes[i] == 0) {
-                    genes[i] = 1;
+        try{
+            for (int i = 0; i<genes.length; i++) {
+             double preMutateFitnessScore = formula.getClausesMatched(genes);
+                int[] postMutatedGenes;
+             postMutatedGenes = genes.clone();
+             if (postMutatedGenes[i] == 0) {
+                    postMutatedGenes[i] = 1;
                 } else {
-                    genes[i] = 0;
-                }
+                 postMutatedGenes[i] = 0;
+             }
+                double postMutateFitnessScore = formula.getClausesMatched(postMutatedGenes);
+                if(postMutateFitnessScore>preMutateFitnessScore) {
+                    if (genes[i] == 0) {
+                     genes[i] = 1;
+                    } else {
+                        genes[i] = 0;
+                    }
+                 }
             }
-
+        }
+        catch(Exception e) {
+            System.out.println("Failure to greedy mutate");
+            System.out.println("Error: " + e);
         }
     }
 

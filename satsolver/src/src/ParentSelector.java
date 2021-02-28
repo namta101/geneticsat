@@ -9,9 +9,11 @@ public class ParentSelector {
     private double[] rankBoard;
     private final int numberOfChromosomesInEachRank = 2;
     private final GACombination.ParentSelection parentSelectionMethod;
+    private Random rand;
 
     public ParentSelector() {
         parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
+        rand = new Random();
     }
 
     // Sets up the Roulette Wheel or Rank Board
@@ -31,17 +33,27 @@ public class ParentSelector {
 
     // Chooses the parent by selecting from the created roulette wheel or rank board
     public Chromosome chooseParent(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
-        switch (parentSelectionMethod) {
-            case RouletteWheel:
-                return rouletteWheelSelection(chromosomes, currentGenerationTotalFitnessScore);
-            case Rank:
-                return rankBoardSelection(chromosomes, currentGenerationTotalFitnessScore);
-            default:
-                System.out.println("Error in choosing parent selection method: " + parentSelectionMethod + "Choosing default " +
-                        "roulette wheel " );
-                return rouletteWheelSelection(chromosomes, currentGenerationTotalFitnessScore);
+        try {
+            switch (parentSelectionMethod) {
+                case RouletteWheel:
+                    return rouletteWheelSelection(chromosomes, currentGenerationTotalFitnessScore);
+                case Rank:
+                    return rankBoardSelection(chromosomes, currentGenerationTotalFitnessScore);
+                default:
+                    System.out.println("Error in choosing parent selection method: " + parentSelectionMethod + "Choosing default " +
+                            "roulette wheel ");
+                    return rouletteWheelSelection(chromosomes, currentGenerationTotalFitnessScore);
+            }
+        } catch(Exception e) {
+            System.out.println("Error choosing parent, choosing top 1st or 2nd chromosome" + "Error: " + e);
+            if(rand.nextBoolean()) {
+                return chromosomes.get(0);
+            } else {
+                return chromosomes.get(1);
+            }
         }
     }
+
 
     public void setRouletteWheel(ArrayList<Chromosome> chromosomes) {
         this.rouletteWheel = createRouletteWheel(chromosomes);

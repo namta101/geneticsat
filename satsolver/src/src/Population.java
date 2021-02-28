@@ -6,7 +6,7 @@ import java.util.ArrayList;
 // It is responsible for also deciding the population size and elitism rate
 public class Population {
     public static final int POPULATION_SIZE = 15;
-    public static final double ELITISM_RATE = 0.9; // Proportion of chromosomes from most fit that stay on to next generation
+    public static final double ELITISM_RATE = 0.9; // Proportion of chromosomes that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
@@ -69,7 +69,6 @@ public class Population {
             chromosomes.get(i).clearFitnessScore();
             chromosomes.get(i).mutate();
             chromosomes.get(i).assignFitnessScore();
-            // sortPopulationByFitnessValue();
         }
 
     }
@@ -80,35 +79,50 @@ public class Population {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();
 
-        parentSelector.setUpForGeneration(chromosomes);
+        try {
+            parentSelector.setUpForGeneration(chromosomes);
 
-        // Keeps number of parents depending on ELITISM_RATE
-        double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
-        double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
+            // Keeps number of parents depending on ELITISM_RATE
+            double individualsCloned = Math.ceil(ELITISM_RATE * (double) (POPULATION_SIZE));
+            double individualsCreated = (double) POPULATION_SIZE - individualsCloned;
 
-        for (int i = 0; i < individualsCloned; i++) {
-            Chromosome clonedIndividual = chromosomes.get(i);
-            newPopulation.add(clonedIndividual);
+            for (int i = 0; i < individualsCloned; i++) {
+                Chromosome clonedIndividual = chromosomes.get(i);
+                newPopulation.add(clonedIndividual);
+            }
+
+            for (int i = 0; i < individualsCreated; i++) {
+                Chromosome clonedIndividual = applyCrossover();
+                newPopulation.add(clonedIndividual);
+            }
+
+            return newPopulation;
+
+        } catch(Exception e) {
+            System.out.println("Error creating new generation, randomly generating new population");
+            System.out.println("Error message: " + e);
+            this.chromosomes = new ArrayList<>();
+            initialisePopulation();
+            return this.chromosomes;
         }
-
-        for (int i = 0; i < individualsCreated; i++) {
-            Chromosome clonedIndividual = applyCrossover();
-            newPopulation.add(clonedIndividual);
-        }
-
-        return newPopulation;
 
     }
 
     // Creates a chromosome by choosing two parents to crossover
     private Chromosome applyCrossover() {
+        try {
+            int[] parentOneGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
+            int[] parentTwoGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
+            int lengthOfGenes = parentOneGenes.length;
 
-        int[] parentOneGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
-        int[] parentTwoGenes = parentSelector.chooseParent(chromosomes, currentGenerationTotalFitnessScore).getGenes();
-        int lengthOfGenes = parentOneGenes.length;
-
-        Chromosome offSpring = parentCrossover.crossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
-        return offSpring;
+            Chromosome offSpring = parentCrossover.crossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
+            return offSpring;
+        } catch(Exception e) {
+            System.out.println("Error in applying crossover." + "Error: " + e);
+            System.out.println("Returning a new chromosome as new offspring");
+            Chromosome defaultChromosome = new Chromosome(numberOfVariables, formula, mutator);
+            return defaultChromosome;
+        }
     }
 
     public ArrayList<Chromosome> getChromosomes(){
