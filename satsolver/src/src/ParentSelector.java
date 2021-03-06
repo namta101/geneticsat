@@ -12,7 +12,7 @@ public class ParentSelector {
     private Random rand;
 
     public ParentSelector() {
-        parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
+        parentSelectionMethod = GACombination.ParentSelection.Rank;
         rand = new Random();
     }
 

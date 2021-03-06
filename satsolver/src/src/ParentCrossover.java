@@ -13,7 +13,7 @@ public class ParentCrossover {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         this.mutator = mutator;
-        crossoverMethod = GACombination.Crossover.TwoPoint;
+        crossoverMethod = GACombination.Crossover.Uniform;
     }
 
     public Chromosome crossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
@@ -44,7 +44,8 @@ public class ParentCrossover {
         for (int i = 0; i < lengthOfGenes - 1; i += 2) {
             offspringGenes[i] = parentOneGenes[i];
             offspringGenes[i + 1] = parentTwoGenes[i + 1];
-        }
+        }//43 genes
+        // 40 -> 42,
         if(lengthOfGenes%2 == 1) {
             offspringGenes[lengthOfGenes-1] = parentOneGenes[lengthOfGenes-1]; // Make sure genes are full
         }

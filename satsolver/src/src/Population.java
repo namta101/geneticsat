@@ -1,12 +1,13 @@
 package src;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 // This class represents the set of solutions (chromosomes)
 // It is responsible for also deciding the population size and elitism rate
 public class Population {
-    public static final int POPULATION_SIZE = 15;
-    public static final double ELITISM_RATE = 0.9; // Proportion of chromosomes that stay on to next generation
+    public static final int POPULATION_SIZE = 100;
+    public static final double ELITISM_RATE = 0.95; // Proportion of chromosomes that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
@@ -19,11 +20,11 @@ public class Population {
     private ParentCrossover parentCrossover;
 
 
-    public Population(Formula formula, int numberOfVariables) {
+    public Population(Formula formula, int numberOfVariables, Mutator mutator) {
         chromosomes = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
-        mutator = new Mutator(formula);
+        this.mutator = mutator;
         parentSelector = new ParentSelector();
         parentCrossover = new ParentCrossover(formula, numberOfVariables, mutator);
     }
@@ -59,7 +60,7 @@ public class Population {
 
         // Used by the solver to check if the solutions are improving
         double previousGenerationHighestFitnessScore = currentGenerationHighestFitnessScore;
-        currentGenerationHighestFitnessScore = chromosomes.get(0).getFitnessScore();
+        currentGenerationHighestFitnessScore = getCurrentMostSatisfyingSolutionFitnessScore();
         generationImproved = currentGenerationHighestFitnessScore > previousGenerationHighestFitnessScore;
 
         // Undergoes parent selection and crossover
@@ -127,6 +128,10 @@ public class Population {
 
     public ArrayList<Chromosome> getChromosomes(){
         return this.chromosomes;
+    }
+
+    public void setChromosomes(ArrayList<Chromosome> chromosomes) {
+        this.chromosomes = chromosomes;
     }
 
     public int[] getCurrentMostSatisfyingSolution(){

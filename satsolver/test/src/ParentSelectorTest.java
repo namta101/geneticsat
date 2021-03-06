@@ -9,7 +9,7 @@ public class ParentSelectorTest {
     ParentSelector parentSelector;
     public ParentSelectorTest() {
         Formula formula = TestHelper.createFormula();
-        population = new Population(formula,3);
+        population = new Population(formula,3, TestHelper.createMutator());
         population.initialisePopulation();
         population.sortPopulationByFitnessValue(population.getChromosomes());
         population.setCurrentGenerationTotalFitnessScore();

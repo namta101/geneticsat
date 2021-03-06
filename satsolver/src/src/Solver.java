@@ -1,10 +1,13 @@
 package src;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Solver {
     private Population population;
     private final Formula formula;
     private final int numberOfVariables;
+    private Mutator mutator;
     private boolean solutionFound;
     private int[] satisfyingSolution;
     private long startTime;
@@ -12,7 +15,7 @@ public class Solver {
     private final long upperTimeLimit = 300000;
     private long timeBeforeEachRestart = 400000;
     private final int generationsBeforeRestart = 1000000;
-    private int unimprovedGenerationsBeforeRestart = 300;
+    private int unimprovedGenerationsBeforeRestart = 100;
     private int unimprovedGenerationsCount = 1;
     private int generationNumber = 1;
     private int numberOfRestarts = 0;
@@ -21,7 +24,8 @@ public class Solver {
     public Solver(Formula formula, int numberOfVariables) {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
-        population = new Population(formula, numberOfVariables);
+        mutator = new Mutator(formula);
+        population = new Population(formula, numberOfVariables, mutator);
         solutionFound = false;
     }
 
@@ -66,6 +70,37 @@ public class Solver {
     }
 
     public void restartAlgorithm() {
+// debug through
+        // Take every other chromosome
+        population.sortPopulationByFitnessValue(population.getChromosomes());
+        ArrayList<Chromosome> chromosomes = new ArrayList<>();
+        int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33);
+
+        int x = 0;
+        int y = 1;
+        for(int i = 0; i<numberOfIndividualsToSave-1; i++) {
+            if(x >= Population.POPULATION_SIZE){
+                chromosomes.add(population.getChromosomes().get(y));
+                y = y + 2;
+            } else {
+                chromosomes.add(population.getChromosomes().get(x));
+                x = x + 2;
+            }
+        }
+
+        int numberOfIndividualsToCreate = Population.POPULATION_SIZE - chromosomes.size();
+        for(int i = 0; i<numberOfIndividualsToCreate;i++) {
+            chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
+        }
+
+        population.setChromosomes(chromosomes);
+        System.out.println("Restarting algorithm");
+        generationNumber = 0;
+        unimprovedGenerationsCount = 0;
+        resetRestartTimer();
+    }
+
+    public void previousRestartAlgorithm() {
         System.out.println("Restarting algorithm");
         population.clearPopulation();
         population.initialisePopulation();

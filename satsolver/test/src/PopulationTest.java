@@ -9,7 +9,7 @@ public class PopulationTest {
 
     public PopulationTest() {
         Formula formula = TestHelper.createFormula();
-        population = new Population(formula, 3);
+        population = new Population(formula, 3, TestHelper.createMutator());
     }
 
     @Test
