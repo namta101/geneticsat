@@ -2,12 +2,15 @@ package src;
 
 import java.util.Random;
 
-// This class is responsible for the stage of Parent Crossover in the genetic algorithm
+/**
+ * This class is responsible for the stage of Parent Crossover in the genetic algorithm
+  */
 public class ParentCrossover {
     private final Formula formula;
     private final int numberOfVariables;
     private final GACombination.Crossover crossoverMethod;
     private final Mutator mutator;
+
 
     public ParentCrossover(Formula formula, int numberOfVariables, Mutator mutator) {
         this.formula = formula;
@@ -16,6 +19,9 @@ public class ParentCrossover {
         crossoverMethod = GACombination.Crossover.Uniform;
     }
 
+    /**
+     * Crossovers a pair of genes, if fails to do so, then will return a newly created chromosome
+     */
     public Chromosome crossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
         try{
         switch (crossoverMethod.name()) {
@@ -36,7 +42,9 @@ public class ParentCrossover {
         }
     }
 
-    // Alternates choosing bits from parent one and parent two genes
+    /**
+     * Alternates choosing bits from both the parents' genes
+     */
     public Chromosome uniformCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
         Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];
@@ -44,8 +52,7 @@ public class ParentCrossover {
         for (int i = 0; i < lengthOfGenes - 1; i += 2) {
             offspringGenes[i] = parentOneGenes[i];
             offspringGenes[i + 1] = parentTwoGenes[i + 1];
-        }//43 genes
-        // 40 -> 42,
+        }
         if(lengthOfGenes%2 == 1) {
             offspringGenes[lengthOfGenes-1] = parentOneGenes[lengthOfGenes-1]; // Make sure genes are full
         }
@@ -54,8 +61,9 @@ public class ParentCrossover {
         return offspring;
     }
 
-    // Chooses two pivot points, and chooses parent one's genes for before the first point and after the second point
-    // And then chooses parent two's genes for in between these two points
+    /**
+     * Randomly chooses two pivot points to select portions of each parents' genes
+     */
     public Chromosome twoPointCrossover(int[] parentOneGenes, int[] parentTwoGenes, int lengthOfGenes) {
         Chromosome offspring = new Chromosome(numberOfVariables, formula, mutator);
         int[] offspringGenes = new int[lengthOfGenes];
@@ -84,19 +92,28 @@ public class ParentCrossover {
 
     }
 
-    // Checks whether crossover length chosen is between 20% and 80% of the length of genes
+    /**
+     * Returns whether the crossover length would be between 20% and 80%
+     */
     public boolean shouldCrossover(int pointOne, int pointTwo, int lengthOfGenes) {
-        if (lengthOfGenes < 10) { // We want to allow crossover to happen if we are dealing with small chromosomes
+        if (lengthOfGenes < 10) { // Allow crossover 100% for exceptional cases (very small problem size)
             return true;
         }
 
-        int lengthOfCrossover = Math.abs(pointOne - pointTwo);
-        int bottomBoundary = (int) Math.round(lengthOfGenes * 0.2);
-        int topBoundary =  (int) Math.round(lengthOfGenes * 0.8);
-        if (lengthOfCrossover < bottomBoundary) {
-            return false;
-        }
-        if (lengthOfCrossover > topBoundary) {
+        try {
+            int lengthOfCrossover = Math.abs(pointOne - pointTwo);
+            int bottomBoundary = (int) Math.round(lengthOfGenes * 0.2);
+            int topBoundary = (int) Math.round(lengthOfGenes * 0.8);
+            if (lengthOfCrossover < bottomBoundary) {
+                return false;
+            }
+
+            if (lengthOfCrossover > topBoundary) {
+                return false;
+            }
+        } catch(Exception e) {
+            System.out.println("Fail to check length of crossover, returning false, chromosomes will not crossover");
+            System.out.println("Error message: " + e);
             return false;
         }
 

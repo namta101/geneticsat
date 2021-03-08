@@ -1,10 +1,16 @@
 package src;
 
-public final class      Utility {
+/**
+ * A utility class
+ */
+public final class Utility {
     private Utility() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Converts a string array to an int array
+     */
     public static int[] convertStringArrayToIntArray(String[] stringArray) {
         int size = stringArray.length;
         int[] intArray = new int[size];

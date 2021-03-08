@@ -2,10 +2,15 @@ package src;
 
 import java.util.Arrays;
 
-// This class represents a clause in the formula
+/**
+ * Represents a clause in the SAT problem
+ */
 public class Clause {
     private final int[] variables;
 
+    /**
+     * Creates a clause by taking in an array of variables. Deals with DIMACS format.
+     */
     public Clause(int[] variables) {
         try {
             if (variables[variables.length - 1] == 0) {
@@ -21,10 +26,11 @@ public class Clause {
         }
     }
 
+    /**
+     * Returns the variables in the clause
+     */
     public int[] getVariables() {
         return variables;
     }
 
-    // Get Unit clause + pure literal 
-    // Return variable number of each one, then lock it on the chromosome level
 }

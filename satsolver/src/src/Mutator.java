@@ -2,7 +2,9 @@ package src;
 
 import java.util.Random;
 
-// This class is responsible for the stage of Mutation in the genetic algorithm
+/**
+ * This class is responsible for the stage of Mutation in the genetic algorithm
+ */
 public class Mutator {
     private final GACombination.Mutation mutationMethod;
     private final Formula formula;

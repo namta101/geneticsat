@@ -15,6 +15,10 @@ public class Main {
     private static long stopTime;
     private static long elapsedTime;
 
+    /**
+     * Starts the program by taking in the user parameters, deciding whether to create a new formula from the
+     * parameters or solve the pre-inputted problem file (which should be placed in the CNF folder).
+     */
     public static void main(String[] args) {
         startTimer();
         formula = new Formula();
@@ -24,7 +28,7 @@ public class Main {
             createEmptyFile(args[0]);
             writeSATProblemToFile(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
         }
-        // Convert the SAT problem file to a form our SAT solver can solve
+        // Reading the SAT problem and creating the formula for our solver to solve
         readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
         int[] solution = satSolver.solve();
@@ -34,8 +38,9 @@ public class Main {
         System.out.println("Completed in: " + elapsedTime + "ms");
     }
 
-    // Reads the inputted DIMACS file, and populates the class variables with the
-    // information from the file
+    /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,
+    * and numberOfClauses with the information from the file
+    */
     public static void readDIMACSFile(String dimacsFile) {
         try {
             File file = new File("satsolver/cnf/" + dimacsFile);
@@ -65,7 +70,9 @@ public class Main {
         }
     }
 
-    // Create an empty file to write our newly created SAT problem to
+    /**
+     * Create an empty file to write our newly created SAT problem to
+     */
     public static void createEmptyFile(String fileName) {
         File myObj = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
         try {
@@ -76,7 +83,9 @@ public class Main {
         }
     }
 
-    // Create a 3 SAT problem and write it to the newly created file
+    /**
+     * Create a 3 SAT problem and write it to the newly created file
+     */
     public static void writeSATProblemToFile(String fileName, int numberOfVariables, int numberOfClauses) {
         try{
             PrintStream fileWriter = new PrintStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
@@ -100,7 +109,9 @@ public class Main {
         }
     }
 
-    // Append the statistics of solving the SAT problem to the file
+    /**
+     * Append the statistics of solving the SAT problem to the file
+     */
     public static void writeSATStatisticsToFile(String fileName, long timeToSolve, int[] solution){
         try {
             PrintStream fileWriter = new PrintStream(new FileOutputStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName, true));
@@ -117,10 +128,16 @@ public class Main {
         }
     }
 
+    /**
+     * Starts timer to record how long the program takes
+     */
     public static void startTimer() {
         startTime = System.currentTimeMillis();
     }
 
+    /**
+     * Stops timer when the program terminates
+     */
     public static void stopTimer() {
         stopTime = System.currentTimeMillis();
         elapsedTime = stopTime - startTime;

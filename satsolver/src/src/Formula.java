@@ -2,7 +2,9 @@ package src;
 
 import java.util.ArrayList;
 
-// Class which represents the SAT problem - converted from the SAT file
+/**
+ * Represents the SAT problem as a formula - created from the SAT file
+  */
 public class Formula {
     private final ArrayList<Clause> clauses;
 
@@ -10,6 +12,9 @@ public class Formula {
         clauses = new ArrayList<>();
     }
 
+    /**
+     * Returns the number of clauses matched by comparing the genes inputted with the formula
+     */
     // Returns the number of clauses matched - comparing the created genes with the formula in the SAT file
     public int getClausesMatched(int[] genes) {
         try {
@@ -36,17 +41,23 @@ public class Formula {
             }
             return numberOfClausesMatched;
         } catch(Exception e) {
-            System.out.println("Error check clauses matched, assigning 0");
+            System.out.println("Error checking clauses matched, assigning 0");
             System.out.println("Error message:" + e);
             return 0;
         }
     }
 
-    
+
+    /**
+     * Adds a clause to the formula
+     */
     public void addClause(Clause clause) {
         clauses.add(clause);
     }
 
+    /**
+     * Returns the number of clauses in the formula
+     * */
     public int getSize() {
         return clauses.size();
     }

@@ -1,8 +1,11 @@
 package src;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class is responsible for initialising the population which kicks off the genetic algorithm.
+ * It is also responsible for holding the upper time limit of how long to solve for, and deals with the restart policy
+ */
 public class Solver {
     private Population population;
     private final Formula formula;
@@ -14,7 +17,6 @@ public class Solver {
     private long restartTimeTracker;
     private final long upperTimeLimit = 300000;
     private long timeBeforeEachRestart = 400000;
-    private final int generationsBeforeRestart = 1000000;
     private int unimprovedGenerationsBeforeRestart = 100;
     private int unimprovedGenerationsCount = 1;
     private int generationNumber = 1;
@@ -29,7 +31,9 @@ public class Solver {
         solutionFound = false;
     }
 
-    // If solution found return else return empty int[]
+    /**
+     * Starts the timers and if a solution is found then return the solution or return an empty int[]
+     */
     public int[] solve() {
         startTimer();
         resetRestartTimer();
@@ -57,6 +61,9 @@ public class Solver {
         }
     }
 
+    /**
+     * Moves on to the next population (one iteration of the genetic algorithm)
+     */
     public void processAlgorithm(){
         generationNumber++;
         totalGenerationsPassed++;
@@ -69,13 +76,17 @@ public class Solver {
         }
     }
 
+    /**
+     * Restarts algorithm but saves 3/4 of the current population on restart, and randomly generates the remaining
+     * portion
+     */
     public void restartAlgorithm() {
-// debug through
-        // Take every other chromosome
+
         population.sortPopulationByFitnessValue(population.getChromosomes());
         ArrayList<Chromosome> chromosomes = new ArrayList<>();
         int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33);
 
+        // Take every other chromosome, if more than half is saved, then loop back to the top again
         int x = 0;
         int y = 1;
         for(int i = 0; i<numberOfIndividualsToSave-1; i++) {
@@ -100,6 +111,9 @@ public class Solver {
         resetRestartTimer();
     }
 
+    /**
+     * The previous restart algorithm which generated a completely new population
+     */
     public void previousRestartAlgorithm() {
         System.out.println("Restarting algorithm");
         population.clearPopulation();
@@ -109,11 +123,16 @@ public class Solver {
         resetRestartTimer();
     }
 
+    /**
+     * Prints out the satisfying solution (will be null if one is not found yet)
+     */
     private void printSatisfyingSolution() {
         System.out.println("Solution satisfied: " + Arrays.toString(population.getSatisfyingSolution()));
     }
 
-
+    /**
+     * Prints out the current most satisfying solution
+     */
     private void printCurrentMostSatisfyingSolution() {
         int[] currentFittestSolution = population.getCurrentMostSatisfyingSolution();
         double currentFitnessSolutionFitnessScore = population.getCurrentMostSatisfyingSolutionFitnessScore();
@@ -121,9 +140,16 @@ public class Solver {
                 + "Fitness score of: " + currentFitnessSolutionFitnessScore);
     }
 
+    /**
+     * Starts timer to track how long the solver attempts to solve the problem
+     */
     public void startTimer() {
         this.startTime = System.currentTimeMillis();
     }
+
+    /**
+     * Returns whether we should restart the algorithm, currently done on unimproved generation count and time taken
+     */
 
     public boolean shouldRestartAlgorithm() {
         if (population.getGenerationImproved()){
@@ -137,47 +163,79 @@ public class Solver {
         return timeLimitPassed || unimprovedGenerationsPassed;
     }
 
+    /**
+     * Resets the restart timer. Used when restarting algorithm
+     */
     public void resetRestartTimer() {this.restartTimeTracker = System.currentTimeMillis();}
 
+    /**
+     * Returns the time of the restartTimeTracker
+     */
     public long getRestartTimeTracker() {
         return restartTimeTracker;
     }
 
+    /**
+     * Returns whether the solver has reached the upper time limit and should terminate
+     */
     public boolean upperTimeLimitReached() {
         System.out.println("Time: " + (System.currentTimeMillis() - startTime));
         return (System.currentTimeMillis() - startTime) > upperTimeLimit;
     }
 
+    /**
+     * Returns generation number
+     */
     public int getGenerationNumber() {
         return generationNumber;
     }
 
+    /**
+     * Returns the start time
+     */
     public long getStartTime() {
         return startTime;
     }
 
+    /**
+     * Returns the total number of restarts occurred so far
+     */
     public int getNumberOfRestarts() {
         return numberOfRestarts;
     }
 
+    /**
+     * Returns the total number of generations passed
+     */
     public int getTotalGenerationsPassed() {
         return totalGenerationsPassed;
     }
 
+    /**
+     * Returns the number of unimproved generations so far
+     */
     public int getUnimprovedGenerationsBeforeRestart() {
         return unimprovedGenerationsBeforeRestart;
     }
 
+    /**
+     * Returns how long we give the solver before we restart the algorithm
+     */
     public long getTimeBeforeEachRestart() {
         return timeBeforeEachRestart;
     }
 
+    /**
+     * Sets the time before restarting to max
+     */
     public void setRestartTimerToMax() {
         timeBeforeEachRestart = 999999999;
     }
 
+    /**
+     * Sets the number of unimproved generations before restarting to max
+     */
     public void setUnimprovedGenerationsBeforeRestartToMax(){
-
         unimprovedGenerationsBeforeRestart = 999999999;
     }
 

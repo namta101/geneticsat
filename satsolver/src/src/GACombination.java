@@ -1,6 +1,8 @@
 package src;
 
-//Enum class that contains different types of Genetic Algorithm implementations
+/**
+ * An Enum class which contains the different genetic implementations that are available
+ */
 public class GACombination {
 
     public enum ParentSelection {

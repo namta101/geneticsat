@@ -3,20 +3,25 @@ package src;
 import java.util.ArrayList;
 import java.util.Random;
 
-// This class is responsible for the stage of Parent Selection in the genetic algorithm
+/**
+ * This class is responsible for the stage of Parent Selection in the genetic algorithm
+ */
+
 public class ParentSelector {
     private double[] rouletteWheel;
     private double[] rankBoard;
-    private final int numberOfChromosomesInEachRank = 2;
+    private final int numberOfChromosomesInEachRank = 2; // To  be used for rank selection
     private final GACombination.ParentSelection parentSelectionMethod;
     private Random rand;
 
     public ParentSelector() {
-        parentSelectionMethod = GACombination.ParentSelection.Rank;
+        parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
         rand = new Random();
     }
 
-    // Sets up the Roulette Wheel or Rank Board
+    /**
+     * Creates and populates the Roulette Wheel or Rank Board
+     */
     public void setUpForGeneration(ArrayList<Chromosome> chromosomes) {
         switch (parentSelectionMethod.name()) {
             case "RouletteWheel":
@@ -31,7 +36,9 @@ public class ParentSelector {
         }
     }
 
-    // Chooses the parent by selecting from the created roulette wheel or rank board
+    /**
+     * Selects the parent from either the Roulette Wheel or Rank Board (Option chosen in constructor)
+     */
     public Chromosome chooseParent(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
         try {
             switch (parentSelectionMethod) {
@@ -54,11 +61,16 @@ public class ParentSelector {
         }
     }
 
-
+    /**
+     * Sets the Roulette Wheel to the class variable by creating one
+     */
     public void setRouletteWheel(ArrayList<Chromosome> chromosomes) {
         this.rouletteWheel = createRouletteWheel(chromosomes);
     }
 
+    /**
+     * Selects a chromosome from the Roulette Wheel
+     */
     public Chromosome rouletteWheelSelection(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
         int indexOfChromosomeToChoose = 0;
         Random rand = new Random();
@@ -75,6 +87,9 @@ public class ParentSelector {
         return chromosomes.get(indexOfChromosomeToChoose);
     }
 
+    /**
+     * Creates and populates the Roulette Wheel
+     */
     public double[] createRouletteWheel(ArrayList<Chromosome> chromosomes) {
         double[] newRouletteWheel = new double[Population.POPULATION_SIZE];
         double rouletteTotal = 0;
@@ -86,10 +101,16 @@ public class ParentSelector {
         return newRouletteWheel;
     }
 
+    /**
+     * Sets the Rank Board to the class variable by creating one
+     */
     public void setRankBoard(ArrayList<Chromosome> chromosomes) {
         this.rankBoard = createRankBoard(chromosomes);
     }
 
+    /**
+     * Selects a chromosome from the Rank Board
+     */
     public Chromosome rankBoardSelection(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
         int rankToChoose = chooseRank(currentGenerationTotalFitnessScore);
         int positionInRank = new Random().nextInt(numberOfChromosomesInEachRank); // selects random chromosome in rank
@@ -105,6 +126,9 @@ public class ParentSelector {
         return chromosomes.get(indexOfChromosomeToChoose);
     }
 
+    /**
+     * Chooses the rank to pick the chromosome from
+     */
     public int chooseRank(double currentGenerationTotalFitnessScore) {
         Random rand = new Random();
         double positionOfRank = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble());
@@ -120,7 +144,9 @@ public class ParentSelector {
         return indexOfRankToChoose;
     }
 
-    // Create the rank board depending on the fitness score of each of the chromosomes and number of chromosomes we want in each rank
+    /**
+     * Create the rank board depending on the fitness score of each of the chromosomes and number of chromosomes we want in each rank
+     */
     public double[] createRankBoard(ArrayList<Chromosome> chromosomes) {
         int numberOfRanks = (Population.POPULATION_SIZE+ numberOfChromosomesInEachRank - 1 ) / numberOfChromosomesInEachRank; // round the integer up
         double[] rankBoard = new double[numberOfRanks];
@@ -151,12 +177,16 @@ public class ParentSelector {
         return rankBoard;
     }
 
-    // Used for unit tests
+    /**
+     * For unit tests
+     */
     public int getNumberOfChromosomesInEachRank() {
         return this.numberOfChromosomesInEachRank;
     }
 
-    // Used for unit tests
+    /**
+     * For unit tests
+     */
     public double[] getRouletteWheel() {
         return rouletteWheel;
     }
