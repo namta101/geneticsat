@@ -84,8 +84,7 @@ public class Solver {
 
         population.sortPopulationByFitnessValue(population.getChromosomes());
         ArrayList<Chromosome> chromosomes = new ArrayList<>();
-        int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33);
-
+        int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33); // Saves roughly 0.75 of pop.
         // Take every other chromosome, if more than half is saved, then loop back to the top again
         int x = 0;
         int y = 1;
@@ -150,7 +149,6 @@ public class Solver {
     /**
      * Returns whether we should restart the algorithm, currently done on unimproved generation count and time taken
      */
-
     public boolean shouldRestartAlgorithm() {
         if (population.getGenerationImproved()){
             unimprovedGenerationsCount = 0;

@@ -43,7 +43,8 @@ public class Main {
     */
     public static void readDIMACSFile(String dimacsFile) {
         try {
-            File file = new File("satsolver/cnf/" + dimacsFile);
+            File file = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + dimacsFile);
+            System.out.print("File name: " + file.toString());
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
