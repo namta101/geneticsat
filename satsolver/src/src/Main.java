@@ -39,11 +39,14 @@ public class Main {
     }
 
     /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,
-    * and numberOfClauses with the information from the file
-    */
+     * and numberOfClauses with the information from the file
+     */
     public static void readDIMACSFile(String dimacsFile) {
         try {
-            File file = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + dimacsFile);
+            File currentDirectory = new File(System.getProperty("user.dir"));
+            String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), dimacsFile);
+            File file = new File(filePath);
+            System.out.print("File name current:" + System.getProperty("user.dir"));
             System.out.print("File name: " + file.toString());
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -75,9 +78,11 @@ public class Main {
      * Create an empty file to write our newly created SAT problem to
      */
     public static void createEmptyFile(String fileName) {
-        File myObj = new File(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
+        File currentDirectory = new File(System.getProperty("user.dir"));
+        String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), fileName);
+        File file = new File(filePath);
         try {
-            myObj.createNewFile();
+            file.createNewFile();
         } catch (IOException exception) {
             System.out.println("Fail to create file");
             exception.printStackTrace();
@@ -89,7 +94,9 @@ public class Main {
      */
     public static void writeSATProblemToFile(String fileName, int numberOfVariables, int numberOfClauses) {
         try{
-            PrintStream fileWriter = new PrintStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName);
+            File currentDirectory = new File(System.getProperty("user.dir"));
+            String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), fileName);
+            PrintStream fileWriter = new PrintStream(filePath);
             fileWriter.println("p cnf " + numberOfVariables + " " + numberOfClauses);
             Random rand = new Random();
             for(int i = 0; i<numberOfClauses; i++){
@@ -115,7 +122,9 @@ public class Main {
      */
     public static void writeSATStatisticsToFile(String fileName, long timeToSolve, int[] solution){
         try {
-            PrintStream fileWriter = new PrintStream(new FileOutputStream(System.getProperty("user.dir") + "/satsolver/cnf/" + fileName, true));
+            File currentDirectory = new File(System.getProperty("user.dir"));
+            String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), fileName);
+            PrintStream fileWriter = new PrintStream(new FileOutputStream(filePath, true));
             if (solution.length<1) { // Solution of length 0 indicates no solution was found
                 fileWriter.println("c " + "No solution found" + "Time spent trying to find solution: " + timeToSolve + "ms");
             } else {
