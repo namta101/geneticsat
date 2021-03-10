@@ -44,7 +44,7 @@ If instead you wish to generate a new randomly generated problem:
 
 This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
 
-## Results
+## Output
 
 During solving, the solver will continously print out the name and the generation number it is on (generation number resets on restart policy).
 When the solver finds a solution, it will output this solution with the time taken to the user. If not, it will output the closest solution according to its fitness score with the fitness score.
