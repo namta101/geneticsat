@@ -34,7 +34,7 @@ It is recommended to run the solver using an IDE, as this will take care of buil
 2. Open up the folder in the chosen IDE
 3. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
  - The Working Directory should match to where the Main file is held: 
- - For example if the project is placed in directory *IdeaProjects*, then this is likely the directory /Users/nam/IdeaProjects/geneticsat/satsolver/src
+ - For example if the project is placed in directory *IdeaProjects*, then the likely directory is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
  - Typically the working directory is by default  /Users/nam/IdeaProjects/geneticsat/, so simply add on satsolver/src
 4. Edit Program arguments as wanted (details above 'Arguments for Solver') 
 5. Run the program
