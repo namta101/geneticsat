@@ -14,13 +14,14 @@ These examples are named X.Y.no.cnf, where X is the number of variables, Y the n
 If you wish to submit your own problem, simply place the file inside this folder (the file must be in DIMACS format - look at the examples for help)
 
 1. To run, simply type java src/Main {name of file}
-*java src/Main 10.15.cnf 
+ - For example: *java src/Main 10.15.1.cnf*
 
 ### Solving a randomly generated problem 
 
 If instead you wish to generate a new randomly generated problem:
 
 1. To run, simply type java src/Main {fileName} {numberOfVariables} {numberOfClauses}
+ - For example: *java src/Main test.cnf 30 50*
 
 This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
 
