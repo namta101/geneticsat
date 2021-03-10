@@ -1,5 +1,5 @@
 
-# Solving the problem using an IDE (such as IntelliJ)
+# Running the solver using an IDE (such as IntelliJ)
 
 It is recommended to run the solver using an IDE, as this will take care of compilation/building the solver. 
 
