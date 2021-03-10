@@ -46,7 +46,7 @@ This will generate a random 3-SAT problem depending on the number of variables a
 
 ## Output
 
-During solving, the solver will continously print out the name and the generation number it is on (generation number resets on restart policy).
+During solving, the solver will continously print out the current time taken and the generation number it is on (generation number resets on restart policy).
 When the solver finds a solution, it will output this solution with the time taken to the user. If not, it will output the closest solution according to its fitness score with the fitness score.
 This output will also be appended to the problem file.
 
