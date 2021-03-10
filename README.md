@@ -5,12 +5,13 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 
 1. Unzip the folder
 2. Open up the folder in the chosen IDE
-3. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
+3. To build, you must have installed the junit-jupiter 5.42 library: which can be installed from the Maven Repository (this is to run the unit tests).
+4. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
  - The Working Directory should match to where the Main file is held: 
  - For example if the project is placed in directory *IdeaProjects*, then the likely directory needed is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
  - Typically the working directory is by default  /Users/nam/IdeaProjects/geneticsat/, so simply add on satsolver/src
-4. Edit Program arguments as wanted (details below 'Arguments for Solver') 
-5. Run the program
+5. Edit Program arguments as wanted (details below 'Arguments for Solver') 
+6. Run the program
 
 
 
