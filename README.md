@@ -1,3 +1,19 @@
+
+# Solving the problem using an IDE (such as IntelliJ)
+
+It is recommended to run the solver using an IDE, as this will take care of compilation/building the solver. 
+
+1. Unzip the folder
+2. Open up the folder in the chosen IDE
+3. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
+ - The Working Directory should match to where the Main file is held: 
+ - For example if the project is placed in directory *IdeaProjects*, then the likely directory is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
+ - Typically the working directory is by default  /Users/nam/IdeaProjects/geneticsat/, so simply add on satsolver/src
+4. Edit Program arguments as wanted (details below 'Arguments for Solver') 
+5. Run the program
+
+
+
 # Running the Solver from terminal
 
 1. Unzip the folder
@@ -6,6 +22,8 @@
 4. Run using java src/Main {Arguments}
 
 ## Arguments for the Solver
+
+There are two sets of arguments you can give to the solver. 1 Argument if there is already a given problem or 3 Arguments if you wish to generate a new problem to solve. 
 
 ### Solving an existing/given problem
 
@@ -24,19 +42,5 @@ If instead you wish to generate a new randomly generated problem:
  - For example: *java src/Main test.cnf 30 50*
 
 This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
-
-
-# Solving the problem using an IDE (such as IntelliJ)
-
-It is recommended to run the solver using an IDE, as this will take care of building the solver. 
-
-1. Unzip the folder
-2. Open up the folder in the chosen IDE
-3. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
- - The Working Directory should match to where the Main file is held: 
- - For example if the project is placed in directory *IdeaProjects*, then the likely directory is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
- - Typically the working directory is by default  /Users/nam/IdeaProjects/geneticsat/, so simply add on satsolver/src
-4. Edit Program arguments as wanted (details above 'Arguments for Solver') 
-5. Run the program
 
 
