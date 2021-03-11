@@ -9,7 +9,7 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 4. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
  - The Working Directory should match to where the Main file is held: 
  - For example if the project is placed in directory *IdeaProjects*, then the likely directory needed is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
- - Typically the working directory is by default  /Users/nam/IdeaProjects/geneticsat/, so simply add on satsolver/src
+ - Typically the working directory is by default  /Users/yourName/IdeaProjects/geneticsat/, so simply add on satsolver/src
 5. Edit Program arguments as wanted (details below 'Arguments for Solver') 
 6. Run the program
 
