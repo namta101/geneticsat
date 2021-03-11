@@ -5,7 +5,7 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 
 1. Unzip the folder
 2. Open up the folder in the chosen IDE
-3. To build, you must have installed the junit-jupiter 5.42 library: which can be installed from the [Maven Repository](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api). (This is to build the unit tests, and is not necessary if you run from the terminal).    You will  likely be prompted and automatically be able to install this library from within the IDE.
+3. To build, you must have installed the junit-jupiter 5.42 library: which can be installed from the [Maven Repository](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api). (This is to build the unit tests, and is not necessary if you run from the terminal and do not wish to build the unit tests).    You will  likely be prompted and automatically be able to install this library from within the IDE.
 4. **MAKE SURE TO CHECK THE WORKING DIRECTORY**
  - The Working Directory should match to where the Main file is held: 
  - For example if the project is placed in directory *IdeaProjects*, then the likely directory needed is /Users/yourName/IdeaProjects/geneticsat/satsolver/src
