@@ -17,7 +17,7 @@ public class Main {
 
     /**
      * Starts the program by taking in the user parameters, deciding whether to create a new formula from the
-     * parameters or solve the pre-inputted problem file (which should be placed in the CNF folder).
+     * parameters or solve the pre-inputted problem file (which needs to be placed in the CNF folder).
      */
     public static void main(String[] args) {
         startTimer();
@@ -46,8 +46,6 @@ public class Main {
             File currentDirectory = new File(System.getProperty("user.dir"));
             String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), dimacsFile);
             File file = new File(filePath);
-            System.out.print("File name current:" + System.getProperty("user.dir"));
-            System.out.print("File name: " + file.toString());
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
@@ -75,7 +73,7 @@ public class Main {
     }
 
     /**
-     * Create an empty file to write our newly created SAT problem to
+     * Create an empty file in the CNF folder
      */
     public static void createEmptyFile(String fileName) {
         File currentDirectory = new File(System.getProperty("user.dir"));
@@ -90,7 +88,7 @@ public class Main {
     }
 
     /**
-     * Create a 3 SAT problem and write it to the newly created file
+     * Create a 3-SAT problem and write it to the file
      */
     public static void writeSATProblemToFile(String fileName, int numberOfVariables, int numberOfClauses) {
         try{

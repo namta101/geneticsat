@@ -3,14 +3,12 @@ package src;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class SolverTest {
-    private Formula formula = TestHelper.createFormula();
-    private Formula unsatisfiableFormula = TestHelper.createUnsatisfiableFormula();
-    private int numberOfVariables = 3;
-    private Solver solver;
-    private Solver solverWithUnsatisfiableInstance;
+    private final Formula formula = TestHelper.createFormula();
+    private final Formula unsatisfiableFormula = TestHelper.createUnsatisfiableFormula();
+    private final int numberOfVariables = 3;
+    private final Solver solver;
+    private final Solver solverWithUnsatisfiableInstance;
 
     public SolverTest(){
         solver = new Solver(formula, numberOfVariables);
@@ -30,6 +28,15 @@ public class SolverTest {
         Thread.sleep(400000);
         boolean result = solver.upperTimeLimitReached();
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    public void resetRestartPolicyCounters_onMethodCall_ResetsCounters(){
+        solver.solve();
+        solver.resetRestartPolicyCounters();
+        Assertions.assertTrue(solver.getRestartTimeTracker() - System.currentTimeMillis() < 1000);
+        Assertions.assertEquals(0, solver.getUnimprovedGenerationsCount());
+        Assertions.assertEquals(0, solver.getGenerationNumber());
     }
 
     @Test
@@ -94,6 +101,14 @@ public class SolverTest {
 
         Assertions.assertTrue(timeAfterLatestReset < timeBeforeEachReset);
 
+    }
+
+    @Test
+    public void previousRestartAlgorithm_resetsGenerationNumberAndResetTimer(){
+        solverWithUnsatisfiableInstance.solve();
+        solverWithUnsatisfiableInstance.previousRestartAlgorithm();
+        Assertions.assertEquals(0, solverWithUnsatisfiableInstance.getGenerationNumber());
+        Assertions.assertTrue(System.currentTimeMillis() - solverWithUnsatisfiableInstance.getRestartTimeTracker() < 1000);
     }
 
 }

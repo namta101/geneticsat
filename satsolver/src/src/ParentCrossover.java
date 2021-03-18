@@ -96,11 +96,13 @@ public class ParentCrossover {
      * Returns whether the crossover length would be between 20% and 80%
      */
     public boolean shouldCrossover(int pointOne, int pointTwo, int lengthOfGenes) {
-        if (lengthOfGenes < 10) { // Allow crossover 100% for exceptional cases (very small problem size)
+        if (lengthOfGenes < 10 && lengthOfGenes > 0) { // Allow crossover 100% for exceptional cases (very small problem size)
             return true;
         }
-
         try {
+            if (lengthOfGenes<=0) {
+                throw new Exception();
+            }
             int lengthOfCrossover = Math.abs(pointOne - pointTwo);
             int bottomBoundary = (int) Math.round(lengthOfGenes * 0.2);
             int topBoundary = (int) Math.round(lengthOfGenes * 0.8);

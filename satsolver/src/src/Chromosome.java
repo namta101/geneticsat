@@ -40,13 +40,6 @@ public class Chromosome {
     }
 
     /**
-     * Sets fitness score to the number of clauses it matches with the formula
-     */
-    public void assignFitnessScore() {
-        this.fitnessScore = formula.getClausesMatched(genes);
-    }
-
-    /**
      * Mutates the genes
      */
     public void mutate() {
@@ -62,6 +55,19 @@ public class Chromosome {
         double randomNumber = Math.random();
         return (randomNumber <= MUTATION_RATE);
     }
+
+    //================================================================================
+    // Getters & Setters
+    //================================================================================
+
+
+    /**
+     * Sets fitness score to the number of clauses it matches with the formula
+     */
+    public void assignFitnessScore() {
+        this.fitnessScore = formula.getClausesMatched(genes);
+    }
+
 
     /**
      * Replaces its own genes with another array of genes

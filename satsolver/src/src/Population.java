@@ -7,14 +7,14 @@ import java.util.ArrayList;
  * It is also responsible for deciding the population size and elitism rate
  */
 public class Population {
-    public static final int POPULATION_SIZE = 100;
+    public static final int POPULATION_SIZE = 100; // Number of chromosomes (solutions) in each generation
     public static final double ELITISM_RATE = 0.95; // Proportion of chromosomes that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
     private int[] satisfyingSolution;
     private double currentGenerationHighestFitnessScore = 0;
-    private boolean generationImproved = false;
+    private boolean generationImproved = false; // Used to implement restart policy
     private double currentGenerationTotalFitnessScore;
     private Mutator mutator;
     private ParentSelector parentSelector;
@@ -41,13 +41,6 @@ public class Population {
     }
 
     /**
-     * Clears the population by assigning the class variable chromosomes to a new ArrayList
-     */
-    public void clearPopulation(){
-        chromosomes = new ArrayList<>();
-    }
-
-    /**
      * Checks whether there is a satisfying solution by comparing each chromosome's fitness core with the formula size
      * If there is, will assign the class variable satisfying solution to this chromosome's genes
      */
@@ -66,6 +59,7 @@ public class Population {
 
         return false;
     }
+
 
     /**
      * Moves on to the next generation by creating a new population
@@ -94,7 +88,7 @@ public class Population {
      * Creates a new population by copying over a portion of the old population and creating new chromosomes
      * by using parent selection and crossover
      */
-    private ArrayList<Chromosome> createNewPopulation() {
+    public ArrayList<Chromosome> createNewPopulation() {
 
         ArrayList<Chromosome> newPopulation = new ArrayList<>();
 
@@ -145,6 +139,18 @@ public class Population {
             return defaultChromosome;
         }
     }
+
+    //================================================================================
+    // Getters & Setters
+    //================================================================================
+
+    /**
+     * Clears the population by assigning the class variable chromosomes to a new ArrayList
+     */
+    public void clearPopulation(){
+        chromosomes = new ArrayList<>();
+    }
+
 
     /**
      * Returns the chromosomes in the population
@@ -201,20 +207,6 @@ public class Population {
         return total;
     }
 
-    /**
-     * Sorths the population by their fitness score in descending order
-     */
-    public void sortPopulationByFitnessValue(ArrayList<Chromosome> chromosomes) {
-
-        chromosomes.sort((Chromosome c1, Chromosome c2) -> {
-            if (c1.getFitnessScore() > c2.getFitnessScore())
-                return -1;
-            if (c1.getFitnessScore() < c2.getFitnessScore())
-                return 1;
-            return 0;
-
-        });
-    }
 
     /**
      * Returns the found satisfying solution (will be null if not found yet)
@@ -230,6 +222,22 @@ public class Population {
    public boolean getGenerationImproved(){
         return generationImproved;
    }
+
+    /**
+     * Sorts the population by their fitness score in descending order
+     */
+    public void sortPopulationByFitnessValue(ArrayList<Chromosome> chromosomes) {
+
+        chromosomes.sort((Chromosome c1, Chromosome c2) -> {
+            if (c1.getFitnessScore() > c2.getFitnessScore())
+                return -1;
+            if (c1.getFitnessScore() < c2.getFitnessScore())
+                return 1;
+            return 0;
+
+        });
+    }
+
 
 }
 

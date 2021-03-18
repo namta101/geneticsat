@@ -38,7 +38,16 @@ public class MutatorTest {
         int postMutatedGenesFitnessScore = formula.getClausesMatched(genesToMutate);
 
         Assertions.assertTrue(postMutatedGenesFitnessScore>=preMutatedGenesFitnessScore);
+    }
 
+    @Test
+    public void randomMutation_throwsError_SystemDoesNotCrash() {
+        mutator.randomMutation(null);
+    }
+
+    @Test
+    public void greedyMutation_throwsError_SystemDoesNotCrash() {
+        mutator.greedyMutation(null);
     }
 
 }

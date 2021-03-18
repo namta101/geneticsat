@@ -12,7 +12,7 @@ public class ParentSelector {
     private double[] rankBoard;
     private final int numberOfChromosomesInEachRank = 2; // To  be used for rank selection
     private final GACombination.ParentSelection parentSelectionMethod;
-    private Random rand;
+    private final Random rand;
 
     public ParentSelector() {
         parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
@@ -23,6 +23,7 @@ public class ParentSelector {
      * Creates and populates the Roulette Wheel or Rank Board
      */
     public void setUpForGeneration(ArrayList<Chromosome> chromosomes) {
+        try{
         switch (parentSelectionMethod.name()) {
             case "RouletteWheel":
                 setRouletteWheel(chromosomes);
@@ -31,8 +32,16 @@ public class ParentSelector {
                 setRankBoard(chromosomes);
                 break;
             default:
-                System.out.println("Error choosing parent selection method, using default Rank Board implementation");
-                setRankBoard(chromosomes);
+                System.out.println("Error choosing parent selection method, setting up Roulette Wheel");
+                setRouletteWheel(chromosomes);
+        }
+
+        } catch(Exception e) {
+            System.out.print("Exception error in setting up parent selection for generation");
+            System.out.print("Exception error: " + e);
+            System.out.print("Setting up both Roulette Wheel and Rank Board");
+            setRouletteWheel(chromosomes);
+            setRankBoard(chromosomes);
         }
     }
 
@@ -61,6 +70,10 @@ public class ParentSelector {
         }
     }
 
+    //================================================================================
+    // Roulette Wheel Functionality
+    //================================================================================
+
     /**
      * Sets the Roulette Wheel to the class variable by creating one
      */
@@ -73,7 +86,6 @@ public class ParentSelector {
      */
     public Chromosome rouletteWheelSelection(ArrayList<Chromosome> chromosomes, double currentGenerationTotalFitnessScore) {
         int indexOfChromosomeToChoose = 0;
-        Random rand = new Random();
         double positionOnRouletteWheel = 1 + ((currentGenerationTotalFitnessScore - 1) * rand.nextDouble()); // values from 1 to total
         double currentTotal = 0;
         for (int i = 0; i < rouletteWheel.length; i++) { // Slowly goes through roulette wheel until we get to
@@ -91,15 +103,25 @@ public class ParentSelector {
      * Creates and populates the Roulette Wheel
      */
     public double[] createRouletteWheel(ArrayList<Chromosome> chromosomes) {
-        double[] newRouletteWheel = new double[Population.POPULATION_SIZE];
+        double[] rouletteWheel = new double[Population.POPULATION_SIZE];
         double rouletteTotal = 0;
-        for (int i = 0; i < Population.POPULATION_SIZE; i++) {
-            double chromosomeFitness = chromosomes.get(i).getFitnessScore();
-            rouletteTotal = rouletteTotal + chromosomeFitness;
-            newRouletteWheel[i] = rouletteTotal;
+        try {
+            for (int i = 0; i < Population.POPULATION_SIZE; i++) {
+                double chromosomeFitness = chromosomes.get(i).getFitnessScore();
+                rouletteTotal = rouletteTotal + chromosomeFitness;
+                rouletteWheel[i] = rouletteTotal;
+            }
+        } catch(Exception e) {
+            System.out.println("Failure to create roulette wheel, caution: roulette wheel will be empty");
+            System.out.println("Exception: " + e);
+            return rouletteWheel;
         }
-        return newRouletteWheel;
+        return rouletteWheel;
     }
+
+    //================================================================================
+    // Ranked Functionality
+    //================================================================================
 
     /**
      * Sets the Rank Board to the class variable by creating one
@@ -151,31 +173,41 @@ public class ParentSelector {
         int numberOfRanks = (Population.POPULATION_SIZE+ numberOfChromosomesInEachRank - 1 ) / numberOfChromosomesInEachRank; // round the integer up
         double[] rankBoard = new double[numberOfRanks];
         int rank = 0;
-        for(int i = 0; i<Population.POPULATION_SIZE-numberOfChromosomesInEachRank; i += numberOfChromosomesInEachRank) { //Do not calculate final rank
-            for(int j=0; j<10; j++) {
-                rankBoard[rank] = rankBoard[rank] + chromosomes.get(i).getFitnessScore();
+        try {
+            for (int i = 0; i < Population.POPULATION_SIZE - numberOfChromosomesInEachRank; i += numberOfChromosomesInEachRank) { //Do not calculate final rank
+                for (int j = 0; j < 10; j++) {
+                    rankBoard[rank] = rankBoard[rank] + chromosomes.get(i).getFitnessScore();
+                }
+                rank++;
             }
-            rank++;
-        }
 
-        // Calculating the last rank needs to be done differently
-        // If we have 101 chromosomes in the population, and each rank has 10 chromosomes, the last rank will have 1 chromosome not 10!
-        // This means we have to calculate an average of the fitness score for the remainder chromosomes
-        int numberOfMembersInLastRank = Population.POPULATION_SIZE%numberOfChromosomesInEachRank;
+            // Calculating the last rank needs to be done differently
+            // If we have 101 chromosomes in the population, and each rank has 10 chromosomes, the last rank will have 1 chromosome not 10!
+            // This means we have to calculate an average of the fitness score for the remainder chromosomes
+            int numberOfMembersInLastRank = Population.POPULATION_SIZE % numberOfChromosomesInEachRank;
 
-        if(numberOfMembersInLastRank != 0) { // means there will be chromosomes left over after grouping (the remainder)
-            for (int i = 0; i < numberOfMembersInLastRank; i++) {
-                rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
+            if (numberOfMembersInLastRank != 0) { // means there will be chromosomes left over after grouping (the remainder)
+                for (int i = 0; i < numberOfMembersInLastRank; i++) {
+                    rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
+                }
+                double averageFitness = rankBoard[numberOfRanks - 1] / numberOfMembersInLastRank;
+                rankBoard[numberOfRanks - 1] = averageFitness * 10;
+            } else { // Otherwise calculate final rank as usual
+                for (int i = 0; i < numberOfChromosomesInEachRank; i++) {
+                    rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
+                }
             }
-            double averageFitness = rankBoard[numberOfRanks-1] / numberOfMembersInLastRank;
-            rankBoard[numberOfRanks-1] = averageFitness * 10;
-        }  else { // Otherwise calculate final rank as usual
-            for(int i =0; i< numberOfChromosomesInEachRank; i++) {
-                rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
-            }
+        } catch(Exception e) {
+            System.out.println("Failure to create roulette wheel, caution: rank board  will be empty");
+            System.out.println("Exception: " + e);
+            return rankBoard;
         }
         return rankBoard;
     }
+
+    //================================================================================
+    // Getters & Setters
+    //================================================================================
 
     /**
      * For unit tests
@@ -189,6 +221,13 @@ public class ParentSelector {
      */
     public double[] getRouletteWheel() {
         return rouletteWheel;
+    }
+
+    /**
+     * For unit tests
+     */
+    public double[] getRankBoard() {
+        return rankBoard;
     }
 
 }

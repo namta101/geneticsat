@@ -14,6 +14,9 @@ public class Mutator {
         mutationMethod = GACombination.Mutation.Random;
     }
 
+    /**
+     * Mutates a given array of genes
+     */
     public void mutate(int[] genes) {
         switch (mutationMethod.name()) {
             case "Random": randomMutation(genes);
@@ -22,11 +25,12 @@ public class Mutator {
             break;
             default: System.out.println("Error choosing mutation method, using default Random implementation");
                      randomMutation(genes);
-
         }
     }
 
-    // Mutates the genes by randomly flipping a gene
+    /**
+     *  Mutates the genes by randomly flipping a gene
+      */
     public void randomMutation(int[] genes) {
         try {
             Random rand = new Random();
@@ -44,7 +48,9 @@ public class Mutator {
 
     }
 
-    // Mutates a gene by going alone the line of genes and flipping a gene only if it improves the fitness score
+    /**
+     * Mutates a gene by going along the line of genes and flipping a gene only if it improves the fitness score
+     */
     public void greedyMutation(int[] genes) {
         try{
             for (int i = 0; i<genes.length; i++) {

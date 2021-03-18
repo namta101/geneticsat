@@ -17,11 +17,26 @@ public class ParentSelectorTest {
     }
 
     @Test
+    public void chooseParent_throwsException_returnsChromosome() {
+        Chromosome chromosome = parentSelector.chooseParent(population.getChromosomes(), population.getCurrentGenerationTotalFitnessScore());
+        Assertions.assertTrue(chromosome.getFitnessScore() > 0);
+        Assertions.assertNotNull(chromosome.getGenes());
+    }
+
+    @Test
+    public void setUpForGeneration_throwsException_setsUpBothRouletteWheelAndRankBoard() {
+        parentSelector.setUpForGeneration(null);
+        Assertions.assertNotNull(parentSelector.getRouletteWheel());
+        Assertions.assertNotNull(parentSelector.getRouletteWheel());
+
+    }
+
+    @Test
     public void setUpForGeneration_setsUpRouletteWheel(){
         parentSelector.setUpForGeneration(population.getChromosomes());
         double[] rouletteWheel = parentSelector.getRouletteWheel();
         Assertions.assertNotNull(rouletteWheel);
-        Assertions.assertEquals(15, rouletteWheel.length);
+        Assertions.assertEquals(Population.POPULATION_SIZE, rouletteWheel.length);
     }
 
     // We cannot test these 2 method because it could return any chromosome. But we can use it to easily debug the method.
@@ -44,7 +59,6 @@ public class ParentSelectorTest {
     }
 
 
-
     @Test
     public void createRankBoard_returnsCorrectRankBoardSize() {
         double[] rankBoard = parentSelector.createRankBoard(population.getChromosomes());
@@ -60,7 +74,6 @@ public class ParentSelectorTest {
             }
         }
     }
-
 
 
     @Test

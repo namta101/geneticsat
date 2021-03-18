@@ -7,13 +7,20 @@ import java.util.Arrays;
 
 
 public class ParentCrossoverTest {
-    private ParentCrossover parentCrossover;
+    private final ParentCrossover parentCrossover;
     public ParentCrossoverTest() {
         Formula formula = TestHelper.createFormula();
         int numberOfVariables = 3;
         Mutator mutator = new Mutator(formula);
         parentCrossover = new ParentCrossover(formula, numberOfVariables, mutator);
 
+    }
+
+    @Test
+    public void crossover_throwsException_returnsParentOneGenes(){
+        int[] parentOneGenes = new int[]{0,0,0};
+        Chromosome chromosome = parentCrossover.crossover(parentOneGenes, null, 3);
+        Assertions.assertEquals(parentOneGenes, chromosome.getGenes());
     }
 
     @Test
@@ -41,11 +48,11 @@ public class ParentCrossoverTest {
     // Due to randomness of method, it is hard to predict genes that will come out
     @Test
     public void twoPointCrossover_ReturnsChromosome() {
-        int[] parentOneGenes = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        int[] parentTwoGenes = new int[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+        int[] parentOneGenes = new int[]{0,0,0,0,0,0,0,0,0};
+        int[] parentTwoGenes = new int[]{1,1,1,1,1,1,1,1,1};
         Chromosome offspring = parentCrossover.twoPointCrossover(parentOneGenes, parentTwoGenes, parentOneGenes.length);
 
-        Assertions.assertEquals(20, offspring.getGenes().length);
+        Assertions.assertEquals(9, offspring.getGenes().length);
     }
 
     @Test
@@ -70,5 +77,12 @@ public class ParentCrossoverTest {
 
         Assertions.assertFalse(resultOfBelow20PerCent);
         Assertions.assertFalse(resultOfAbove80PerCent);
+    }
+
+    @Test
+    public void shouldCrossover_throwsException_returnsFalse() {
+        boolean result = parentCrossover.shouldCrossover(10, 20, -10);
+        Assertions.assertFalse(result);
+
     }
 }

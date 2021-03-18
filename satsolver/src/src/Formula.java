@@ -15,7 +15,6 @@ public class Formula {
     /**
      * Returns the number of clauses matched by comparing the genes inputted with the formula
      */
-    // Returns the number of clauses matched - comparing the created genes with the formula in the SAT file
     public int getClausesMatched(int[] genes) {
         try {
             int numberOfClausesMatched = 0;

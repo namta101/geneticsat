@@ -8,9 +8,9 @@ import java.util.Arrays;
  */
 public class Solver {
     private Population population;
+    private Mutator mutator;
     private final Formula formula;
     private final int numberOfVariables;
-    private Mutator mutator;
     private boolean solutionFound;
     private int[] satisfyingSolution;
     private long startTime;
@@ -32,7 +32,7 @@ public class Solver {
     }
 
     /**
-     * Starts the timers and if a solution is found then return the solution or return an empty int[]
+     * Starts the timers and if a solution is found then return the solution or return an empty int[] if no solution found in time limit
      */
     public int[] solve() {
         startTimer();
@@ -81,7 +81,6 @@ public class Solver {
      * portion
      */
     public void restartAlgorithm() {
-
         population.sortPopulationByFitnessValue(population.getChromosomes());
         ArrayList<Chromosome> chromosomes = new ArrayList<>();
         int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33); // Saves roughly 0.75 of pop.
@@ -104,6 +103,22 @@ public class Solver {
         }
 
         population.setChromosomes(chromosomes);
+        resetRestartPolicyCounters();
+    }
+
+    /**
+     * The previous restart algorithm which generated a completely new population
+     */
+    public void previousRestartAlgorithm() {
+        population.clearPopulation();
+        population.initialisePopulation();
+        resetRestartPolicyCounters();
+    }
+
+    /**
+     * Reset the counters used in the restart policy
+     */
+    public void resetRestartPolicyCounters() {
         System.out.println("Restarting algorithm");
         generationNumber = 0;
         unimprovedGenerationsCount = 0;
@@ -111,15 +126,18 @@ public class Solver {
     }
 
     /**
-     * The previous restart algorithm which generated a completely new population
+     * Returns whether we should restart the algorithm, currently done on unimproved generation count and time taken
      */
-    public void previousRestartAlgorithm() {
-        System.out.println("Restarting algorithm");
-        population.clearPopulation();
-        population.initialisePopulation();
-        generationNumber = 0;
-        unimprovedGenerationsCount = 0;
-        resetRestartTimer();
+    public boolean shouldRestartAlgorithm() {
+        if (population.getGenerationImproved()){
+            unimprovedGenerationsCount = 0;
+        } else {
+            unimprovedGenerationsCount++;
+
+        }
+        boolean timeLimitPassed = (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
+        boolean unimprovedGenerationsPassed = unimprovedGenerationsCount >= unimprovedGenerationsBeforeRestart;
+        return timeLimitPassed || unimprovedGenerationsPassed;
     }
 
     /**
@@ -139,6 +157,11 @@ public class Solver {
                 + "Fitness score of: " + currentFitnessSolutionFitnessScore);
     }
 
+
+    //================================================================================
+    // Getters & Setters
+    //================================================================================
+
     /**
      * Starts timer to track how long the solver attempts to solve the problem
      */
@@ -146,20 +169,6 @@ public class Solver {
         this.startTime = System.currentTimeMillis();
     }
 
-    /**
-     * Returns whether we should restart the algorithm, currently done on unimproved generation count and time taken
-     */
-    public boolean shouldRestartAlgorithm() {
-        if (population.getGenerationImproved()){
-            unimprovedGenerationsCount = 0;
-        } else {
-            unimprovedGenerationsCount++;
-
-        }
-        boolean timeLimitPassed = (System.currentTimeMillis() - restartTimeTracker) > timeBeforeEachRestart;
-        boolean unimprovedGenerationsPassed = unimprovedGenerationsCount >= unimprovedGenerationsBeforeRestart;
-        return timeLimitPassed || unimprovedGenerationsPassed;
-    }
 
     /**
      * Resets the restart timer. Used when restarting algorithm
@@ -211,6 +220,12 @@ public class Solver {
 
     /**
      * Returns the number of unimproved generations so far
+     */
+    public int getUnimprovedGenerationsCount() {
+        return unimprovedGenerationsCount;
+    }
+    /**
+     * Returns the number of unimproved generations before restart
      */
     public int getUnimprovedGenerationsBeforeRestart() {
         return unimprovedGenerationsBeforeRestart;
