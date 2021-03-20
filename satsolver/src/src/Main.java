@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
@@ -15,15 +17,19 @@ public class Main {
     private static long stopTime;
     private static long elapsedTime;
 
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
+
     /**
      * Starts the program by taking in the user parameters, deciding whether to create a new formula from the
      * parameters or solve the pre-inputted problem file (which needs to be placed in the CNF folder).
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         startTimer();
         formula = new Formula();
 
         // Creating our own randomly generated SAT problem
+        // - change to args length > 3, then check for flag -p, mutation rate, elitism rate, pop size, / crossover selection mutation
         if(args.length > 1) {
             createEmptyFile(args[0]);
             writeSATProblemToFile(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
@@ -36,12 +42,13 @@ public class Main {
         stopTimer();
         writeSATStatisticsToFile(args[0], elapsedTime, solution);
         System.out.println("Completed in: " + elapsedTime + "ms");
+        LOGGER.log(Level.FINEST, "Run complete");
     }
 
     /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,
      * and numberOfClauses with the information from the file
      */
-    public static void readDIMACSFile(String dimacsFile) {
+    public static void readDIMACSFile(String dimacsFile) throws Exception {
         try {
             File currentDirectory = new File(System.getProperty("user.dir"));
             String filePath = String.format("%s/cnf/%s", currentDirectory.getParentFile().toString(), dimacsFile);
@@ -66,9 +73,9 @@ public class Main {
                 }
             }
             scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File is not found, please check file exists or arguments have been typed in correctly");
-            e.printStackTrace();
+        } catch (FileNotFoundException exception) {
+            LOGGER.log(Level.SEVERE, "Fail to find or read file, check arguments, working directory, and file format", exception);
+            throw exception;
         }
     }
 
@@ -82,8 +89,7 @@ public class Main {
         try {
             file.createNewFile();
         } catch (IOException exception) {
-            System.out.println("Fail to create file");
-            exception.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Fail to create file", exception);
         }
     }
 
@@ -110,8 +116,8 @@ public class Main {
             }
             fileWriter.close();
         } catch (IOException exception) {
-            System.out.println("Fail to write new SAT problem to file");
-            exception.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Fail to write SAT problem to the given file", exception);
+
         }
     }
 
@@ -131,8 +137,7 @@ public class Main {
             fileWriter.close();
         }
         catch(Exception exception) {
-            System.out.println("Fail to write SAT statistics to file");
-            exception.printStackTrace();
+            LOGGER.log(Level.WARNING, "Fail to write statistics to the file", exception);
         }
     }
 

@@ -1,6 +1,8 @@
 package src;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for the stage of Parent Crossover in the genetic algorithm
@@ -10,6 +12,7 @@ public class ParentCrossover {
     private final int numberOfVariables;
     private final GACombination.Crossover crossoverMethod;
     private final Mutator mutator;
+    private static final Logger LOGGER = Logger.getLogger(ParentCrossover.class.getName());
 
 
     public ParentCrossover(Formula formula, int numberOfVariables, Mutator mutator) {
@@ -30,12 +33,12 @@ public class ParentCrossover {
             case "TwoPoint":
                 return twoPointCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
             default:
-                System.out.println("Error in choosing crossover method, using default Uniform implementation");
+                LOGGER.log(Level.WARNING,"Error in choosing crossover method, using default Uniform implementation");
                 return uniformCrossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
         }
         }
-        catch(Exception e) {
-            System.out.println("Error crossing over parents, returning first parent" + "Error: " + e);
+        catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Error crossing over parents, returning first parent", exception);
             Chromosome defaultChromosome = new Chromosome(lengthOfGenes, formula, mutator);
             defaultChromosome.intakeParentsGenes(parentOneGenes);
             return defaultChromosome;
@@ -58,6 +61,8 @@ public class ParentCrossover {
         }
 
         offspring.intakeParentsGenes(offspringGenes);
+
+        LOGGER.log(Level.FINEST, "Undergoing Uniform crossover");
         return offspring;
     }
 
@@ -88,6 +93,8 @@ public class ParentCrossover {
         } else {
             offspring.intakeParentsGenes(parentOneGenes);
         }
+
+        LOGGER.log(Level.FINEST, "Undergoing Two-point crossover");
         return offspring;
 
     }
@@ -109,16 +116,14 @@ public class ParentCrossover {
             if (lengthOfCrossover < bottomBoundary) {
                 return false;
             }
-
             if (lengthOfCrossover > topBoundary) {
                 return false;
             }
-        } catch(Exception e) {
-            System.out.println("Fail to check length of crossover, returning false, chromosomes will not crossover");
-            System.out.println("Error message: " + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING,"Fail to check length of crossover, returning false meaning chromosomes will not crossover",
+                    exception);
             return false;
         }
-
         return true;
     }
 

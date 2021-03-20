@@ -2,6 +2,8 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for the stage of Parent Selection in the genetic algorithm
@@ -13,6 +15,7 @@ public class ParentSelector {
     private final int numberOfChromosomesInEachRank = 2; // To  be used for rank selection
     private final GACombination.ParentSelection parentSelectionMethod;
     private final Random rand;
+    private static final Logger LOGGER = Logger.getLogger(ParentSelector.class.getName());
 
     public ParentSelector() {
         parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
@@ -32,14 +35,13 @@ public class ParentSelector {
                 setRankBoard(chromosomes);
                 break;
             default:
-                System.out.println("Error choosing parent selection method, setting up Roulette Wheel");
+                LOGGER.log(Level.WARNING, "Error choosing parent selection method, setting up Roulette Wheel");
                 setRouletteWheel(chromosomes);
         }
 
-        } catch(Exception e) {
-            System.out.print("Exception error in setting up parent selection for generation");
-            System.out.print("Exception error: " + e);
-            System.out.print("Setting up both Roulette Wheel and Rank Board");
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Error in setting up parent selection for generation," +
+                    "Setting up both Roulette Wheel and Rank Board", exception);
             setRouletteWheel(chromosomes);
             setRankBoard(chromosomes);
         }
@@ -56,12 +58,11 @@ public class ParentSelector {
                 case Rank:
                     return rankBoardSelection(chromosomes, currentGenerationTotalFitnessScore);
                 default:
-                    System.out.println("Error in choosing parent selection method: " + parentSelectionMethod + "Choosing default " +
-                            "roulette wheel ");
+                    LOGGER.log(Level.WARNING, "Error in choosing parent selection method, using default roulette wheel");
                     return rouletteWheelSelection(chromosomes, currentGenerationTotalFitnessScore);
             }
-        } catch(Exception e) {
-            System.out.println("Error choosing parent, choosing top 1st or 2nd chromosome" + "Error: " + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Error choosing parent, choosing top 1st or 2nd chromosome", exception);
             if(rand.nextBoolean()) {
                 return chromosomes.get(0);
             } else {
@@ -96,7 +97,8 @@ public class ParentSelector {
             }
 
         }
-        return chromosomes.get(indexOfChromosomeToChoose);
+        LOGGER.log(Level.FINEST, "Undergoing Roulette Wheel Selection");
+        return chromosomes.get(indexOfChromosomeToChoose); // If there was an error in creation, will pick the first chromosome
     }
 
     /**
@@ -111,9 +113,8 @@ public class ParentSelector {
                 rouletteTotal = rouletteTotal + chromosomeFitness;
                 rouletteWheel[i] = rouletteTotal;
             }
-        } catch(Exception e) {
-            System.out.println("Failure to create roulette wheel, caution: roulette wheel will be empty");
-            System.out.println("Exception: " + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING,"Failure to create roulette wheel, caution: roulette wheel will be empty", exception);
             return rouletteWheel;
         }
         return rouletteWheel;
@@ -145,7 +146,8 @@ public class ParentSelector {
             indexOfChromosomeToChoose = (rankToChoose*numberOfChromosomesInEachRank) + positionInRank;
         }
 
-        return chromosomes.get(indexOfChromosomeToChoose);
+        LOGGER.log(Level.FINEST, "Undergoing Ranked Selection");
+        return chromosomes.get(indexOfChromosomeToChoose); // If there was an error in creation, will pick the first chromosome
     }
 
     /**
@@ -197,9 +199,8 @@ public class ParentSelector {
                     rankBoard[numberOfRanks - 1] = rankBoard[numberOfRanks - 1] + chromosomes.get(Population.POPULATION_SIZE - numberOfChromosomesInEachRank + i).getFitnessScore();
                 }
             }
-        } catch(Exception e) {
-            System.out.println("Failure to create roulette wheel, caution: rank board  will be empty");
-            System.out.println("Exception: " + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Failure to create roulette wheel, caution: rank board  will be empty", exception);
             return rankBoard;
         }
         return rankBoard;

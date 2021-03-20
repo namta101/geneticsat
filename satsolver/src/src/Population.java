@@ -1,6 +1,8 @@
 package src;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents the set of solutions (chromosomes), and is responsible for producing new solutions
@@ -19,6 +21,7 @@ public class Population {
     private Mutator mutator;
     private ParentSelector parentSelector;
     private ParentCrossover parentCrossover;
+    private static final Logger LOGGER = Logger.getLogger(Population.class.getName());
 
 
     public Population(Formula formula, int numberOfVariables, Mutator mutator) {
@@ -35,8 +38,13 @@ public class Population {
      * Each chromosome will automatically create its own solution(genes) and calculate its own fitness score
      */
     public void initialisePopulation() {
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
+        try {
+            for (int i = 0; i < POPULATION_SIZE; i++) {
+                chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
+            }
+        } catch(Exception exception) {
+            LOGGER.log(Level.SEVERE, "Failure to initialise population, problem in chromosome creation", exception);
+            throw exception;
         }
     }
 
@@ -52,11 +60,10 @@ public class Population {
                     return true;
                 }
             }
-        } catch(Exception e) {
-            System.out.println("Could not check if solution is satisfied, aborting");
-            throw e;
+        } catch(Exception exception) {
+            LOGGER.log(Level.SEVERE, "Could not check if solution is satisfied, aborting", exception);
+            throw exception;
         }
-
         return false;
     }
 
@@ -65,21 +72,26 @@ public class Population {
      * Moves on to the next generation by creating a new population
      */
     public void nextPopulation() {
-        setCurrentGenerationTotalFitnessScore();
-        sortPopulationByFitnessValue(this.chromosomes);
+        try {
+            setCurrentGenerationTotalFitnessScore();
+            sortPopulationByFitnessValue(this.chromosomes);
 
-        // Used by the solver to check if the solutions are improving
-        double previousGenerationHighestFitnessScore = currentGenerationHighestFitnessScore;
-        currentGenerationHighestFitnessScore = getCurrentMostSatisfyingSolutionFitnessScore();
-        generationImproved = currentGenerationHighestFitnessScore > previousGenerationHighestFitnessScore;
+            // Used by the solver to check if the solutions are improving
+            double previousGenerationHighestFitnessScore = currentGenerationHighestFitnessScore;
+            currentGenerationHighestFitnessScore = getCurrentMostSatisfyingSolutionFitnessScore();
+            generationImproved = currentGenerationHighestFitnessScore > previousGenerationHighestFitnessScore;
 
-        // Undergoes parent selection and crossover
-        chromosomes = createNewPopulation();
+            // Undergoes parent selection and crossover
+            chromosomes = createNewPopulation();
 
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            chromosomes.get(i).clearFitnessScore();
-            chromosomes.get(i).mutate();
-            chromosomes.get(i).assignFitnessScore();
+            for (int i = 0; i < POPULATION_SIZE; i++) {
+                chromosomes.get(i).clearFitnessScore();
+                chromosomes.get(i).mutate();
+                chromosomes.get(i).assignFitnessScore();
+            }
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Failure to move on to next population", exception);
+            throw exception;
         }
 
     }
@@ -111,9 +123,8 @@ public class Population {
 
             return newPopulation;
 
-        } catch(Exception e) {
-            System.out.println("Error creating new generation, randomly generating new population");
-            System.out.println("Error message: " + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Error creating new generation, randomly generating new population", exception);
             this.chromosomes = new ArrayList<>();
             initialisePopulation();
             return this.chromosomes;
@@ -132,9 +143,9 @@ public class Population {
 
             Chromosome offSpring = parentCrossover.crossover(parentOneGenes, parentTwoGenes, lengthOfGenes);
             return offSpring;
-        } catch(Exception e) {
-            System.out.println("Error in applying crossover." + "Error: " + e);
-            System.out.println("Returning a new chromosome as new offspring");
+
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Error in applying crossover, returning a new chromosome as new offspring", exception);
             Chromosome defaultChromosome = new Chromosome(numberOfVariables, formula, mutator);
             return defaultChromosome;
         }

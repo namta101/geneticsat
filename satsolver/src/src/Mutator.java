@@ -1,6 +1,8 @@
 package src;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for the stage of Mutation in the genetic algorithm
@@ -8,6 +10,7 @@ import java.util.Random;
 public class Mutator {
     private final GACombination.Mutation mutationMethod;
     private final Formula formula;
+    private static final Logger LOGGER = Logger.getLogger(Mutator.class.getName());
 
     public Mutator(Formula formula) {
         this.formula = formula;
@@ -23,8 +26,8 @@ public class Mutator {
             break;
             case "Greedy": greedyMutation(genes);
             break;
-            default: System.out.println("Error choosing mutation method, using default Random implementation");
-                     randomMutation(genes);
+            default: LOGGER.log(Level.WARNING, "Error choosing mutation method, using default Random implementation");
+                randomMutation(genes);
         }
     }
 
@@ -41,9 +44,9 @@ public class Mutator {
             } else {
                 genes[positionToMutate] = 0;
             }
-        } catch (Exception e) {
-            System.out.println("Failure to random mutate");
-            System.out.println("Error: " + e);
+            LOGGER.log(Level.FINEST, "Undergoing random mutation");
+        } catch (Exception exception) {
+            LOGGER.log(Level.WARNING, "Failure to random mutate", exception);
         }
 
     }
@@ -71,10 +74,10 @@ public class Mutator {
                     }
                  }
             }
+            LOGGER.log(Level.FINEST, "Undergoing greedy mutation");
         }
-        catch(Exception e) {
-            System.out.println("Failure to greedy mutate");
-            System.out.println("Error: " + e);
+        catch(Exception exception) {
+            LOGGER.log(Level.WARNING,"Failure to greedy mutate", exception);
         }
     }
 

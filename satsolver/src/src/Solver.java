@@ -1,6 +1,8 @@
 package src;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for initialising the population which kicks off the genetic algorithm.
@@ -22,6 +24,7 @@ public class Solver {
     private int generationNumber = 1;
     private int numberOfRestarts = 0;
     private int totalGenerationsPassed = 0;
+    private static final Logger LOGGER = Logger.getLogger(Solver.class.getName());
 
     public Solver(Formula formula, int numberOfVariables) {
         this.formula = formula;
@@ -35,29 +38,34 @@ public class Solver {
      * Starts the timers and if a solution is found then return the solution or return an empty int[] if no solution found in time limit
      */
     public int[] solve() {
-        startTimer();
-        resetRestartTimer();
-        population.initialisePopulation();
-        solutionFound = population.isSatisfied();
-        if (solutionFound) {
-            satisfyingSolution = population.getSatisfyingSolution();
-            printSatisfyingSolution();
-        }
-        while(!solutionFound) {
-           processAlgorithm();
-           if(shouldRestartAlgorithm()) {
-               restartAlgorithm();
-               numberOfRestarts++;
-           }
-            if (upperTimeLimitReached()) {
-                printCurrentMostSatisfyingSolution();
-                break;
+        try {
+            startTimer();
+            resetRestartTimer();
+            population.initialisePopulation();
+            solutionFound = population.isSatisfied();
+            if (solutionFound) {
+                satisfyingSolution = population.getSatisfyingSolution();
+                printSatisfyingSolution();
             }
-        }
-        if(solutionFound){
-            return satisfyingSolution;
-        } else {
-            return new int[0];
+            while (!solutionFound) {
+                processAlgorithm();
+                if (shouldRestartAlgorithm()) {
+                    semiRestartPopulation();
+                    numberOfRestarts++;
+                }
+                if (upperTimeLimitReached()) {
+                    printCurrentMostSatisfyingSolution();
+                    break;
+                }
+            }
+            if (solutionFound) {
+                return satisfyingSolution;
+            } else {
+                return new int[0];
+            }
+        } catch(Exception exception) {
+            LOGGER.log(Level.SEVERE, "Solver is not functioning, fix before re-running", exception);
+            throw exception;
         }
     }
 
@@ -65,14 +73,18 @@ public class Solver {
      * Moves on to the next population (one iteration of the genetic algorithm)
      */
     public void processAlgorithm(){
-        generationNumber++;
-        totalGenerationsPassed++;
-        System.out.println("This is Generation number: " + generationNumber);
-        population.nextPopulation();
-        solutionFound = population.isSatisfied();
-        if (solutionFound) {
-            printSatisfyingSolution();
-            satisfyingSolution = population.getSatisfyingSolution();
+        try {
+            generationNumber++;
+            totalGenerationsPassed++;
+            System.out.println("This is Generation number: " + generationNumber);
+            population.nextPopulation();
+            solutionFound = population.isSatisfied();
+            if (solutionFound) {
+                printSatisfyingSolution();
+                satisfyingSolution = population.getSatisfyingSolution();
+            }
+        } catch(Exception exception) {
+            LOGGER.log(Level.SEVERE, "Algorithm is not processing, solutions will not be improving", exception);
         }
     }
 
@@ -80,39 +92,47 @@ public class Solver {
      * Restarts algorithm but saves 3/4 of the current population on restart, and randomly generates the remaining
      * portion
      */
-    public void restartAlgorithm() {
-        population.sortPopulationByFitnessValue(population.getChromosomes());
-        ArrayList<Chromosome> chromosomes = new ArrayList<>();
-        int numberOfIndividualsToSave = (int)Math.floor(Population.POPULATION_SIZE/1.33); // Saves roughly 0.75 of pop.
-        // Take every other chromosome, if more than half is saved, then loop back to the top again
-        int x = 0;
-        int y = 1;
-        for(int i = 0; i<numberOfIndividualsToSave-1; i++) {
-            if(x >= Population.POPULATION_SIZE){
-                chromosomes.add(population.getChromosomes().get(y));
-                y = y + 2;
-            } else {
-                chromosomes.add(population.getChromosomes().get(x));
-                x = x + 2;
+    public void semiRestartPopulation() {
+        try {
+            population.sortPopulationByFitnessValue(population.getChromosomes());
+            ArrayList<Chromosome> chromosomes = new ArrayList<>();
+            int numberOfIndividualsToSave = (int) Math.floor(Population.POPULATION_SIZE / 1.33); // Saves roughly 0.75 of pop.
+            // Take every other chromosome, if more than half is saved, then loop back to the top again
+            int x = 0;
+            int y = 1;
+            for (int i = 0; i < numberOfIndividualsToSave - 1; i++) {
+                if (x >= Population.POPULATION_SIZE) {
+                    chromosomes.add(population.getChromosomes().get(y));
+                    y = y + 2;
+                } else {
+                    chromosomes.add(population.getChromosomes().get(x));
+                    x = x + 2;
+                }
             }
-        }
 
-        int numberOfIndividualsToCreate = Population.POPULATION_SIZE - chromosomes.size();
-        for(int i = 0; i<numberOfIndividualsToCreate;i++) {
-            chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
-        }
+            int numberOfIndividualsToCreate = Population.POPULATION_SIZE - chromosomes.size();
+            for (int i = 0; i < numberOfIndividualsToCreate; i++) {
+                chromosomes.add(new Chromosome(numberOfVariables, formula, mutator));
+            }
 
-        population.setChromosomes(chromosomes);
-        resetRestartPolicyCounters();
+            population.setChromosomes(chromosomes);
+            resetRestartPolicyCounters();
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Using semi-restart algorithm, did not restart", exception);
+        }
     }
 
     /**
      * The previous restart algorithm which generated a completely new population
      */
-    public void previousRestartAlgorithm() {
-        population.clearPopulation();
-        population.initialisePopulation();
-        resetRestartPolicyCounters();
+    public void fullPopulationRestart() {
+        try {
+            population.clearPopulation();
+            population.initialisePopulation();
+            resetRestartPolicyCounters();
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Using full restart algorithm, did not restart", exception);
+        }
     }
 
     /**

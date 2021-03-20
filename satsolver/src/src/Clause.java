@@ -1,12 +1,15 @@
 package src;
 
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a clause in the SAT problem
  */
 public class Clause {
     private final int[] variables;
+    private static final Logger LOGGER = Logger.getLogger(Clause.class.getName());
 
     /**
      * Creates a clause by taking in an array of variables. Deals with DIMACS format.
@@ -18,11 +21,9 @@ public class Clause {
             } else {
                 this.variables = variables;
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Problem with inputted SAT file");
-            throw e; // We still want to let the user know there is an error in their inputted file
-                     // and thus not process the file
+        } catch(Exception exception) {
+            LOGGER.log(Level.SEVERE, "Failure to create clause", exception);
+            throw exception;
         }
     }
 

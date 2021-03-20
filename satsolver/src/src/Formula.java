@@ -1,12 +1,15 @@
 package src;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents the SAT problem as a formula - created from the SAT file
   */
 public class Formula {
     private final ArrayList<Clause> clauses;
+    private static final Logger LOGGER = Logger.getLogger(Formula.class.getName());
 
     public Formula() {
         clauses = new ArrayList<>();
@@ -39,9 +42,8 @@ public class Formula {
                 }
             }
             return numberOfClausesMatched;
-        } catch(Exception e) {
-            System.out.println("Error checking clauses matched, assigning 0");
-            System.out.println("Error message:" + e);
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Failure to check number of clauses matched, assigning 0", exception);
             return 0;
         }
     }

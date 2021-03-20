@@ -70,7 +70,7 @@ public class SolverTest {
         solver.solve();
         solver.processAlgorithm();
         Assertions.assertNotEquals(0, solver.getGenerationNumber());
-        solver.restartAlgorithm();
+        solver.semiRestartPopulation();
         Assertions.assertEquals(0, solver.getGenerationNumber());
 
     }
@@ -106,7 +106,7 @@ public class SolverTest {
     @Test
     public void previousRestartAlgorithm_resetsGenerationNumberAndResetTimer(){
         solverWithUnsatisfiableInstance.solve();
-        solverWithUnsatisfiableInstance.previousRestartAlgorithm();
+        solverWithUnsatisfiableInstance.fullPopulationRestart();
         Assertions.assertEquals(0, solverWithUnsatisfiableInstance.getGenerationNumber());
         Assertions.assertTrue(System.currentTimeMillis() - solverWithUnsatisfiableInstance.getRestartTimeTracker() < 1000);
     }

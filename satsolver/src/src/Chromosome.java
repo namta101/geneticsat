@@ -1,5 +1,8 @@
 package src;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Represents one solution in the population - its solution is found in the genes
  */
@@ -12,6 +15,8 @@ public class Chromosome {
     private final Mutator mutator;
 
     private final double MUTATION_RATE = 0.1;
+    private static final Logger LOGGER = Logger.getLogger(Mutator.class.getName());
+
 
     /**
      * On creation, creates a random solution which is stored in its genes, and then assigns itself a fitness score
@@ -43,8 +48,12 @@ public class Chromosome {
      * Mutates the genes
      */
     public void mutate() {
-        if (shouldMutate()) {
-            mutator.mutate(this.genes);
+        try {
+            if (shouldMutate()) {
+                mutator.mutate(this.genes);
+            }
+        } catch(Exception exception) {
+            LOGGER.log(Level.WARNING, "Chromosome failure to mutate", exception);
         }
     }
 
