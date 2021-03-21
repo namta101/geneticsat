@@ -19,7 +19,7 @@ public class ParentCrossover {
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         this.mutator = mutator;
-        crossoverMethod = GACombination.Crossover.Uniform;
+        crossoverMethod = GACombination.CROSSOVER;
     }
 
     /**

@@ -14,7 +14,7 @@ public class Chromosome {
     private final Formula formula;
     private final Mutator mutator;
 
-    private final double MUTATION_RATE = 0.1;
+    private double MUTATION_RATE;
     private static final Logger LOGGER = Logger.getLogger(Mutator.class.getName());
 
 
@@ -23,6 +23,7 @@ public class Chromosome {
      * depending on the solution compared with formula
      */
     public Chromosome(int numberOfGenes, Formula formula, Mutator mutator) {
+        MUTATION_RATE = GACombination.MUTATION_RATE;
         this.formula = formula;
         this.numberOfGenes = numberOfGenes;
         this.mutator = mutator;

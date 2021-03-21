@@ -28,14 +28,17 @@ public class Main {
         startTimer();
         formula = new Formula();
 
-        // Creating our own randomly generated SAT problem
-        // - change to args length > 3, then check for flag -p, mutation rate, elitism rate, pop size, / crossover selection mutation
-        if(args.length > 1) {
-            createEmptyFile(args[0]);
-            writeSATProblemToFile(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        setupUserConfigurations(args);
+        System.out.print(GACombination.getConfigurationValues());
+
+        // Create randomly generated SAT problem (if user wants)
+        if(args[0].equalsIgnoreCase("--new")) {
+            createEmptyFile(args[1]);
+            writeSATProblemToFile(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+            readDIMACSFile(args[1]);
+        } else {
+            readDIMACSFile(args[0]);
         }
-        // Reading the SAT problem and creating the formula for our solver to solve
-        readDIMACSFile(args[0]);
         Solver satSolver = new Solver(formula, numberOfVariables);
         int[] solution = satSolver.solve();
 
@@ -43,6 +46,60 @@ public class Main {
         writeSATStatisticsToFile(args[0], elapsedTime, solution);
         System.out.println("Completed in: " + elapsedTime + "ms");
         LOGGER.log(Level.FINEST, "Run complete");
+    }
+
+    /**
+     * Adjusts the configuration for the run using the user input
+     */
+    public static void setupUserConfigurations(String[] userInput) {
+        for (int i = 0; i<userInput.length-1; i++){
+            setConfiguration(userInput[i], userInput[i+1]);
+        }
+    }
+
+    /**
+     * Sets the configuration key with the value (eg, mutation rate to be 0.05)
+     */
+    public static void setConfiguration(String mode, String value){
+        if(mode.equalsIgnoreCase("-ms")) {
+            if(value.equalsIgnoreCase("roulettewheel")) {
+                GACombination.setPARENTSELECTION(GACombination.ParentSelection.RouletteWheel);
+            }
+            if(value.equalsIgnoreCase("rank")) {
+                GACombination.setPARENTSELECTION(GACombination.ParentSelection.Rank);
+            }
+        }
+        if(mode.equalsIgnoreCase("-mc")){
+            if(value.equalsIgnoreCase("uniform")) {
+                GACombination.setCROSSOVER(GACombination.Crossover.Uniform);
+            }
+            if(value.equalsIgnoreCase("twopoint")) {
+                GACombination.setCROSSOVER(GACombination.Crossover.TwoPoint);
+            }
+        }
+        if(mode.equalsIgnoreCase("-mm")) {
+            if(value.equalsIgnoreCase("Greedy")){
+                GACombination.setMUTATION(GACombination.Mutation.Greedy);
+            }
+            if(value.equalsIgnoreCase("Random")){
+                GACombination.setMUTATION(GACombination.Mutation.Random);
+            }
+        }
+        if(mode.equals("-pop")) {
+            GACombination.setPopulationSize(Integer.parseInt(value));
+            if (Integer.parseInt(value) < 2) { // User should not put a pop. size below 2
+                GACombination.setPopulationSize(2);
+            }
+        }
+        if(mode.equals("-rm")) {
+            GACombination.setMutationRate(Double.parseDouble(value));
+        }
+        if(mode.equals("-re")) {
+            GACombination.setElitismRate(Double.parseDouble(value));
+            if(Double.parseDouble(value) > 1 ) { // User should not put an elitism rate above 1
+                GACombination.setElitismRate(1); // It would mean that more than total population stay on to next generation
+            }
+        }
     }
 
     /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,

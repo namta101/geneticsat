@@ -9,8 +9,8 @@ import java.util.logging.Logger;
  * It is also responsible for deciding the population size and elitism rate
  */
 public class Population {
-    public static final int POPULATION_SIZE = 100; // Number of chromosomes (solutions) in each generation
-    public static final double ELITISM_RATE = 0.95; // Proportion of chromosomes that stay on to next generation
+    public static int POPULATION_SIZE; // Number of chromosomes (solutions) in each generation
+    public static double ELITISM_RATE; // Proportion of chromosomes that stay on to next generation
     private ArrayList<Chromosome> chromosomes;
     private Formula formula;
     private int numberOfVariables;
@@ -25,6 +25,8 @@ public class Population {
 
 
     public Population(Formula formula, int numberOfVariables, Mutator mutator) {
+        POPULATION_SIZE = GACombination.POPULATION_SIZE;
+        ELITISM_RATE = GACombination.ELITISM_RATE;
         chromosomes = new ArrayList<>();
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;

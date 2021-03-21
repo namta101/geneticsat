@@ -14,7 +14,7 @@ public class Mutator {
 
     public Mutator(Formula formula) {
         this.formula = formula;
-        mutationMethod = GACombination.Mutation.Random;
+        mutationMethod = GACombination.MUTATION;
     }
 
     /**

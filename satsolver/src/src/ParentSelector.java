@@ -18,7 +18,7 @@ public class ParentSelector {
     private static final Logger LOGGER = Logger.getLogger(ParentSelector.class.getName());
 
     public ParentSelector() {
-        parentSelectionMethod = GACombination.ParentSelection.RouletteWheel;
+        parentSelectionMethod = GACombination.PARENT_SELECTION;
         rand = new Random();
     }
 
@@ -200,7 +200,7 @@ public class ParentSelector {
                 }
             }
         } catch(Exception exception) {
-            LOGGER.log(Level.WARNING, "Failure to create roulette wheel, caution: rank board  will be empty", exception);
+            LOGGER.log(Level.WARNING, "Failure to create rank board, caution: rank board  will be empty", exception);
             return rankBoard;
         }
         return rankBoard;
