@@ -24,25 +24,48 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 
 ## Arguments for the Solver
 
-There are two sets of arguments you can give to the solver. 1 Argument if there is already a given problem or 3 Arguments if you wish to generate a new problem to solve. 
+Firstly, there is the option of solving a given problem or letting the solver randomly generate the problem. y
 
 ### Solving an existing/given problem
 
 There are multiple examples given in the cnf folder of various problem sizes.
 These examples are named X.Y.no.cnf, where X is the number of variables, Y the number of clauses. 
-If you wish to submit your own problem, simply place the file inside this folder (the file must be in DIMACS format - look at the examples for help)
+If you wish to submit your own problem, simply place the file inside this folder (the file must be in DIMACS format - look at the examples for help).
+**Note that the first argument must be the name of the file  - there are other arguments you can give that are explained further below**
 
-1. To run, simply type java src/Main {name of file}
+1. To run, simply type java src/Main {name of file}               
  - For example: *java src/Main 10.15.1.cnf*
 
 ### Solving a randomly generated problem 
 
-If instead you wish to generate a new randomly generated problem:
+If instead you wish to generate a new randomly generated problem: you must have the first argument to be '--new'
 
-1. To run, simply type java src/Main {fileName} {numberOfVariables} {numberOfClauses}
- - For example: *java src/Main test.cnf 30 50*
+1. To run, simply type java src/Main --new {fileName} {numberOfVariables} {numberOfClauses}
+ - For example: *java src/Main --new test.cnf 30 50*
 
 This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
+
+### Optional parameters
+
+If you wish to adjust the configuration of the solver, there are multiple parameters you can change, which are listed in the table below:
+
+| Key         | Appropriate Values |
+| ----------- | ----------- |
+| -ms (Parent Selection Method)          | roulettewheel OR rank       |
+| -mc (Parent Crossover Method)   | uniform OR twopoint        |
+| -mm (Mutation Method)   | Greedy OR Random        |
+| -pop (Population size)   |  1 - 500        |
+| -rm (Rate of Mutation)   | 0.001 - 0.999        |
+| -re (Rate of Elitism)   |  0.001 - 0.999|
+
+The default configuration is Rank Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95. 
+You are able to change any number of these configurations as you wish.
+
+An example to do so: 
+
+*java src/Main --new testOwnConfig.cnf 100 300 -rm 0.5 -pop 200*
+This would solve a newly generated problem with 100 variables, 300 clauses with adjusted rate of mutation being 0.5 and population size being 200. The other default settings will stay the same.
+
 
 ## Output
 
