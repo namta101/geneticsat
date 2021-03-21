@@ -31,10 +31,11 @@ Firstly, there is the option of solving a given problem or letting the solver ra
 There are multiple examples given in the cnf folder of various problem sizes.
 These examples are named X.Y.no.cnf, where X is the number of variables, Y the number of clauses. 
 If you wish to submit your own problem, simply place the file inside this folder (the file must be in DIMACS format - look at the examples for help).
-**Note that the first argument must be the name of the file  - there are other arguments you can give that are explained further below**
 
 1. To run, simply type java src/Main {name of file}               
  - For example: *java src/Main 10.15.1.cnf*
+
+**Note that the first argument must be the name of the file  - there are other arguments you can give that are explained further below**
 
 ### Solving a randomly generated problem 
 
@@ -73,6 +74,6 @@ This would solve a newly generated problem with 100 variables, 300 clauses with 
 
 During solving, the solver will continously print out the current time taken and the generation number it is on (generation number resets on restart policy).
 When the solver finds a solution, it will output this solution with the time taken to the user. If not, it will output the closest solution according to its fitness score with the fitness score.
-This output will also be appended to the problem file.
+If the solution is found, this will be appended to the problem file. The time taken for each run will also be appended.
 
 
