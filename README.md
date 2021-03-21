@@ -43,6 +43,8 @@ If instead you wish to generate a new randomly generated problem: you must have 
 1. To run, simply type java src/Main --new {fileName} {numberOfVariables} {numberOfClauses}
  - For example: *java src/Main --new test.cnf 30 50*
 
+**Note, these arguments must be in this exact order each time - there are other arguments you can give that are explained further below**
+
 This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
 
 ### Optional parameters
