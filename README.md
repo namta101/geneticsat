@@ -24,7 +24,7 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 
 ## Arguments for the Solver
 
-Firstly, there is the option of solving a given problem or letting the solver randomly generate the problem. y
+Firstly, there is the option of solving a given problem or letting the solver randomly generate the problem.
 
 ### Solving an existing/given problem
 
