@@ -85,22 +85,26 @@ public class Main {
                 GACombination.setMUTATION(GACombination.Mutation.Random);
             }
         }
-        if(mode.equals("-pop")) {
+        if(mode.equalsIgnoreCase("-pop")) {
             GACombination.setPopulationSize(Integer.parseInt(value));
             if (Integer.parseInt(value) < 2) { // User should not put a pop. size below 2
                 GACombination.setPopulationSize(2);
             }
         }
-        if(mode.equals("-rm")) {
+        if(mode.equalsIgnoreCase("-rm")) {
             GACombination.setMutationRate(Double.parseDouble(value));
         }
-        if(mode.equals("-re")) {
+        if(mode.equalsIgnoreCase("-re")) {
             GACombination.setElitismRate(Double.parseDouble(value));
             if(Double.parseDouble(value) > 1 ) { // User should not put an elitism rate above 1
                 GACombination.setElitismRate(1); // It would mean that more than total population stay on to next generation
             }
         }
-    }
+        if(mode.equalsIgnoreCase("-rr") || value.equalsIgnoreCase("-rr")) {
+            GACombination.turnOnRestartPolicy();
+            }
+        }
+
 
     /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,
      * and numberOfClauses with the information from the file

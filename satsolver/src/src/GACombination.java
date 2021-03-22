@@ -13,6 +13,8 @@ public class GACombination {
     public static Crossover CROSSOVER = Crossover.Uniform;
     public static Mutation MUTATION = Mutation.Random;
 
+    public static boolean isRestartPolicyOn = false;
+
 
     public static void setPARENTSELECTION(ParentSelection parentSelection){
         PARENT_SELECTION = parentSelection;
@@ -65,6 +67,10 @@ public class GACombination {
         POPULATION_SIZE = populationSize;
     }
 
+    public static void turnOnRestartPolicy() {
+        isRestartPolicyOn = true;
+    }
+
     public static String getConfigurationValues() {
         StringBuilder sb = new StringBuilder();
         sb.append("The configuration for this run is: " + "\n");
@@ -74,6 +80,7 @@ public class GACombination {
         sb.append("Parent Selection Method: " + PARENT_SELECTION + "\n");
         sb.append("Parent Crossover Method: " + CROSSOVER + "\n");
         sb.append("Mutation Method: " + MUTATION  + "\n");
+        sb.append("Restart policy on: " + isRestartPolicyOn + "\n");
 
         return sb.toString();
     }

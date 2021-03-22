@@ -17,6 +17,7 @@ public class Solver {
     private int[] satisfyingSolution;
     private long startTime;
     private long restartTimeTracker;
+    private boolean isRestartPolicyOn;
     private final long upperTimeLimit = 300000;
     private long timeBeforeEachRestart = 400000;
     private int unimprovedGenerationsBeforeRestart = 100;
@@ -27,6 +28,7 @@ public class Solver {
     private static final Logger LOGGER = Logger.getLogger(Solver.class.getName());
 
     public Solver(Formula formula, int numberOfVariables) {
+        isRestartPolicyOn = GACombination.isRestartPolicyOn;
         this.formula = formula;
         this.numberOfVariables = numberOfVariables;
         mutator = new Mutator(formula);
@@ -149,6 +151,9 @@ public class Solver {
      * Returns whether we should restart the algorithm, currently done on unimproved generation count and time taken
      */
     public boolean shouldRestartAlgorithm() {
+        if(!isRestartPolicyOn){
+            return false;
+        }
         if (population.getGenerationImproved()){
             unimprovedGenerationsCount = 0;
         } else {
