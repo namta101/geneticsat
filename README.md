@@ -28,7 +28,7 @@ Firstly, there is the option of solving a given problem or letting the solver ra
 
 ### Solving an existing/given problem
 
-There are multiple examples given in the cnf folder of various problem sizes.
+There are multiple example problems given in the cnf folder of various problem sizes.
 These examples are named X.Y.no.cnf, where X is the number of variables, Y the number of clauses. 
 If you wish to submit your own problem, simply place the file inside this folder (the file must be in DIMACS format - look at the examples for help).
 
