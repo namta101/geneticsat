@@ -69,7 +69,7 @@ You are able to change any number of these configurations as you wish.
 An example to do so: 
 
 *java src/Main --new testOwnConfig.cnf 100 300 -rm 0.5 -pop 200 -ms roulettewheel -rr* <br />
-This would solve a newly generated problem with 100 variables, 300 clauses with adjusted rate of mutation being 0.5, population size being 200, parent selection method being roulette wheel and restart policy being on. The other default settings will stay the same.
+This would solve a newly generated problem with 100 variables, 300 clauses with adjusted rate of mutation being 0.5, population size being 200, parent selection method being roulette wheel and restart policy being on. The other settings will remain as the default.
 
 
 ## Output
