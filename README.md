@@ -60,18 +60,21 @@ If you wish to adjust the configuration of the solver, there are multiple parame
 | -pop (Population size)   |  1 - 500        |
 | -rm (Rate of Mutation)   | 0.001 - 0.999        |
 | -re (Rate of Elitism)   |  0.001 - 0.999|
+| -rr (Restart Policy toggle)  |  N/A (no value is needed as it is a switch)|
 
-The default configuration is Rank Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95. 
+
+The default configuration is Rank Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95, and restart policy off. 
 You are able to change any number of these configurations as you wish.
 
 An example to do so: 
 
-*java src/Main --new testOwnConfig.cnf 100 300 -rm 0.5 -pop 200* <br />
-This would solve a newly generated problem with 100 variables, 300 clauses with adjusted rate of mutation being 0.5 and population size being 200. The other default settings will stay the same.
+*java src/Main --new testOwnConfig.cnf 100 300 -rm 0.5 -pop 200 -ms roulettewheel -rr* <br />
+This would solve a newly generated problem with 100 variables, 300 clauses with adjusted rate of mutation being 0.5, population size being 200, parent selection method being roulette wheel and restart policy being on. The other default settings will stay the same.
 
 
 ## Output
 
+The solver will print out the comments in the sat file along with the configuration giving to the solver.
 During solving, the solver will continously print out the current time taken and the generation number it is on (generation number resets on restart policy).
 When the solver finds a solution, it will output this solution with the time taken to the user. If not, it will output the closest solution according to its fitness score with the fitness score.
 If the solution is found, this will be appended to the problem file. The time taken for each run will also be appended.
