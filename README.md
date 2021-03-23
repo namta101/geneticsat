@@ -1,7 +1,13 @@
 
+# Running the Solver from terminal
+
+1. Unzip the folder
+2. Navigate to the directory **geneticsat/satsolver/src/**
+3. Compile all files using **javac src/*.java**
+4. Run using java src/Main {Arguments}
+
 # Running the solver using an IDE (such as IntelliJ)
 
-It is recommended to run the solver using an IDE, as this will take care of compilation/building the solver. 
 
 1. Unzip the folder
 2. Open up the folder in the chosen IDE
@@ -14,13 +20,6 @@ It is recommended to run the solver using an IDE, as this will take care of comp
 6. Run the program
 
 
-
-# Running the Solver from terminal
-
-1. Unzip the folder
-2. Navigate to the directory **geneticsat/satsolver/src/**
-3. Compile all files using **javac src/*.java**
-4. Run using java src/Main {Arguments}
 
 ## Arguments for the Solver
 
