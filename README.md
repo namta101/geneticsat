@@ -62,7 +62,7 @@ If you wish to adjust the configuration of the solver, there are multiple parame
 | -rr (Restart Policy toggle)  |  N/A (no value is needed as it is a switch)|
 
 
-The default configuration is Rank Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95, and restart policy off. 
+The default configuration is Rank Board Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95, and restart policy off. 
 You are able to change any number of these configurations as you wish.
 
 An example to do so: 
