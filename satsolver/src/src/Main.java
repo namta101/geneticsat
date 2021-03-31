@@ -105,7 +105,6 @@ public class Main {
             }
         }
 
-
     /** Reads the inputted DIMACS file, and populates the class variables: formula, numberOfVariables,
      * and numberOfClauses with the information from the file
      */

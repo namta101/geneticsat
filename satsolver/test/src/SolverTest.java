@@ -70,7 +70,7 @@ public class SolverTest {
         solver.solve();
         solver.processAlgorithm();
         Assertions.assertNotEquals(0, solver.getGenerationNumber());
-        solver.semiRestartPopulation();
+        solver.semiRestartPopulation(1.33);
         Assertions.assertEquals(0, solver.getGenerationNumber());
 
     }

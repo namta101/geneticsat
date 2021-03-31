@@ -52,7 +52,7 @@ public class Solver {
             while (!solutionFound) {
                 processAlgorithm();
                 if (shouldRestartAlgorithm()) {
-                    semiRestartPopulation();
+                    semiRestartPopulation(1.33);
                     numberOfRestarts++;
                 }
                 if (upperTimeLimitReached()) {
@@ -94,11 +94,11 @@ public class Solver {
      * Restarts algorithm but saves 3/4 of the current population on restart, and randomly generates the remaining
      * portion
      */
-    public void semiRestartPopulation() {
+    public void semiRestartPopulation(double divisorToSave) {
         try {
             population.sortPopulationByFitnessValue(population.getChromosomes());
             ArrayList<Chromosome> chromosomes = new ArrayList<>();
-            int numberOfIndividualsToSave = (int) Math.floor(Population.POPULATION_SIZE / 1.33); // Saves roughly 0.75 of pop.
+            int numberOfIndividualsToSave = (int) Math.floor(Population.POPULATION_SIZE / divisorToSave); // Saves roughly 0.75 of pop.
             // Take every other chromosome, if more than half is saved, then loop back to the top again
             int x = 0;
             int y = 1;
