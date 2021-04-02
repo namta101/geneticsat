@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class ParentSelector {
     private double[] rouletteWheel;
     private double[] rankBoard;
-    private final int numberOfChromosomesInEachRank = 2; // To  be used for rank selection
+    private final int numberOfChromosomesInEachRank = 10; // To  be used for rank selection
     private final GACombination.ParentSelection parentSelectionMethod;
     private final Random rand;
     private static final Logger LOGGER = Logger.getLogger(ParentSelector.class.getName());
