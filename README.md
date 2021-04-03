@@ -45,11 +45,14 @@ If instead you wish to generate a new randomly generated problem: you must have 
 
 **Note, these arguments must be in this exact order each time - there are other arguments you can give that are explained further below**
 
-This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored in the cnf folder under *fileName*
+This will generate a random 3-SAT problem depending on the number of variables and clauses given, and immediately start solving it. It will also generate a file to hold this problem and the results which will be stored under the cnf folder in the given *fileName*
 
 ### Optional parameters
 
-If you wish to adjust the configuration of the solver, there are multiple parameters you can change, which are listed in the table below:
+The default configuration is Rank Board Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95, and restart policy off. 
+However, you are able to change any number of these configurations as you wish.
+
+The parameters which can be adjusted are listed in the table below:
 
 | Key         | Appropriate Values |
 | ----------- | ----------- |
@@ -62,8 +65,7 @@ If you wish to adjust the configuration of the solver, there are multiple parame
 | -rr (Restart Policy toggle)  |  N/A (no value is needed as it is a switch)|
 
 
-The default configuration is Rank Board Selection, Uniform Crossover, Random mutation, Pop. Size of 100, Mutation Rate of 0.1, Elitism Rate of 0.95, and restart policy off. 
-You are able to change any number of these configurations as you wish.
+
 
 An example to do so: 
 
