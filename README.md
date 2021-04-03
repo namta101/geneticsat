@@ -76,7 +76,7 @@ This would solve a newly generated problem with 100 variables, 300 clauses with 
 ## Output
 
 The solver will print out the comments in the sat file along with the configuration giving to the solver.
-During solving, the solver will continously print out the current time taken and the generation number it is on (generation number resets on restart policy).
+During solving, the solver will continuously print out the current time taken and the generation number it is on (generation number resets on restart policy).
 When the solver finds a solution, it will output this solution with the time taken to the user. If not, it will output the closest solution according to its fitness score with the fitness score.
 If the solution is found, this will be appended to the problem file. The time taken for the entire program to run will also be appended.
 
