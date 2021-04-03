@@ -62,7 +62,7 @@ The parameters which can be adjusted are listed in the table below:
 | -pop (Population size)   |  1 - 500        |
 | -rm (Rate of Mutation)   | 0.001 - 0.999        |
 | -re (Rate of Elitism)   |  0.001 - 0.999|
-| -rr (Restart Policy toggle)  |  N/A (no value is needed as it is a switch)|
+| -rr (Restart Policy toggle)  |  N/A (toggle)|
 
 
 
