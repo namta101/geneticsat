@@ -43,7 +43,11 @@ public class Main {
         int[] solution = satSolver.solve();
 
         stopTimer();
-        writeSATStatisticsToFile(args[0], elapsedTime, solution);
+        if(args[0].equalsIgnoreCase("--new")){
+            writeSATStatisticsToFile(args[1], elapsedTime, solution);
+        } else {
+            writeSATStatisticsToFile(args[0], elapsedTime, solution);
+        }
         System.out.println("Completed in: " + elapsedTime + "ms");
         LOGGER.log(Level.FINEST, "Run complete");
     }
